@@ -3,118 +3,100 @@ const _ = require('lodash');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const router = express.Router();
-const Joi = require('joi');
-const config = require('config');
-const {Otp} = require('../models/otp');
-const auth =require('../middleware/auth');
+const {Otp,validatelogin,validateNumber} = require('../models/otp');
+const {User} = require('../models/user');
 
+const winston = require('winston');
+const dbDebugger = require('debug')('app:db');
 
-//for signup-verifyOTP
-//for login-VerifyOTP
-//generateOTP
-
-//for signup verify stuff-->check for user alreadyexits or not then if do then return else chekc in OTP list then if true then create user
-
-router.post('/verifySignupOTP',async(req,res)=>{
-	const result = validate(req.body);
-	console.log(result);
-	if(result.error){
-		res.status(400).send(result.error.details[0].message);
-		return;
-	}
-	let user = await User.findOne({phone:req.body.phone})
-	if(user) return res.status(400).send('User Already Registered');
-	//get latest otp entry-to be changed
-	let otps = await Otp.findOne({phone:req.body.phone})
-	if(!otps) return res.status(404).send('Invalid OTP');
-	const validotp =await bcrypt.compare(req.body.otp,otps.OTP)
-	if(!validotp) return res.status(404).send('Invalid OTP');
-//  user = new User(_.pick(req.body,['name','email','phone']))
-	user = new User({
-		name:req.body.name,
-		//email:req.body.email,
-		phone:req.body.phone,
-		password:req.body.password
-	});
-	const salt = await bcrypt.genSalt(10);
-	user.password = await bcrypt.hash(user.password,salt)
-	const token = user.generateAuthToken()
-	await user.save();
-	res.header('x-auth-token',token).send(_.pick(user,['_id','name','phone']))
-});
-
-
-//for login ,find user if true ,then verify Otp
-router.post('/verifyloginOTP',async(req,res)=>{
-	const result = validate(req.body);
-	console.log(result);
-	if(result.error){
-		res.status(400).send(result.error.details[0].message);
-		return;
-	}
-	let user = await User.findOne({phone:req.body.phone})
-	if(!user) return res.status(400).send('User Not Registered');
-	//get only latest entry
-	let otps = await Otp.findOne({phone:req.body.phone,otp:req.body.otp})
-	if(!otps) return res.status(404).send('Invalid OTP');
-	const validotp =await bcrypt.compare(req.body.otp,otps.OTP)
-	if(!validotp) return res.status(404).send('Invalid OTP');
-	const token = user.generateAuthToken()
-	await user.save();
-	res.header('x-auth-token',token).send(_.pick(user,['_id','name','phone']))
-});
-
+/*helper function to generate OTP for generateOTP api
+Input->{}
+OutPut->4 digit otp string
+*/
 function generateOTP() {       
     var digits = '0123456789';
     let OTP = '';
     for (let i = 0; i < 4; i++ ) {
         OTP += digits[Math.floor(Math.random() * 10)];
     }
+    console.log(OTP)
+    winston.info(OTP)
+    dbDebugger(OTP)
     return OTP;
 }
 
-//Generate OTP->input phone ,add entry in otp ,send sms
-router.post('/generateOTP',async(req,res,next)=>{
+/*
+GenerateOTP
+Input->PhoneNumber(10 digit String)
+Output->true(boolean)
+Procedure->validateInput using Joi
+generate 4 digit random OTP
+save entry in Otp Table with Phone ,OTP as field with Otp as encrypted
+send SMS to user Phone Number
+Return boolean true,if number not 10 digit 400 request send ,if something else fail like database saving then 500 request
+*/
+router.post('/GenerateOTP',async(req,res,next)=>{
+	//throw new Error("dfgdsf")
 	const result = validateNumber(req.body);
-	console.log(result);
 	if(result.error){
 		res.status(400).send(result.error.details[0].message);
 		return;
 	}
 	const OTP =generateOTP();
 	const otp = new Otp({
-		Phone:req.body.Phone,
-		OTP:req.body.Otp
+		PhoneNumber:req.body.PhoneNumber,
+		OTP:OTP
 	});
 	const salt = await bcrypt.genSalt(10);
 	otp.OTP = await bcrypt.hash(otp.OTP,salt)
-	//handled error of mongodb saves
-	const result = await otp.save();
-	//sendSMS
-	
-		//dbDebugger(ex.message);
-		//internal server error incase someone stop mongodb code 500 and also if it reopen after one minute app isnt hanged
-		//res.status(500).send(ex.message);
-//		for(field in ex.errors)
-//			dbDebugger(ex.errors[field].message);
+	await otp.save();
+	//sendSMS	
 	res.send(true)
-	//add it 
-	//console.log(user);
-	//res.send(user);
+});
+/*
+Input->PhoneNumber(10 digit String),OTP(4 digit String)
+Output->User Object with Field as _id,PhoneNumber ,Name (optional if user is login not new)
+and header x-auth-token as token which has to be send with sensitive api request from client side which contain user info 
+Procedure->
+Validate Input
+Check if user Exists or Not(to decide login or signup)
+Check if OTP match or Not
+Save user if new user
+Generate authentication token
+Return ->
+If successful then user object along with x-auth-header
+If validation fail then code 400 and error message
+If OTP failed either not requested or OTP mismatch send response with 404 code and error message
+If something else fail like database saving then Response send with code 500 and error message
+*/
+router.post('/VerifyOTP',async(req,res)=>{
+	const result = validatelogin(req.body);
+	if(result.error){
+		res.status(400).send(result.error.details[0].message);
+		return;
+	}
+	let user = await User.findOne({PhoneNumber:req.body.PhoneNumber});
+	if(user){
+		//current not implemented not so getting latest not much security needed otherwise keep date field and check using 
+		//created At and moment library
+		const otps = await Otp
+		.find({PhoneNumber:req.body.PhoneNumber})
+		.sort({_id:-1})
+		if(otps.length === 0) return res.status(404).send('Invalid OTP');
+		const validotp =await bcrypt.compare(req.body.OTP,otps[0].OTP);
+		if(!validotp) return res.status(404).send('Invalid OTP');
+		const token = user.generateAuthToken();
+		return res.header('x-auth-token',token).send(_.pick(user,['_id','Name','PhoneNumber']));
+	}
+	//id is same order as date hence
+	const otps = await Otp.find({PhoneNumber:req.body.PhoneNumber}).sort({_id:-1})
+	if(otps.length === 0) return res.status(404).send('Invalid OTP..');
+	const validotp =await bcrypt.compare(req.body.OTP,otps[0].OTP)
+	if(!validotp) return res.status(404).send('Invalid OTP');
+	user = new User({PhoneNumber:req.body.PhoneNumber});
+	const newuser = await user.save();
+	const token = newuser.generateAuthToken()
+	res.header('x-auth-token'[token]).send(user);
 });
 
-
-function validate(req){
-	const schema=Joi.object({
-	phone:Joi.number()
-	});
-	return schema.validate(req);
-}
-
-function validateNumber(req){
-	const schema=Joi.object({
-	phone:Joi.number()
-	});
-	return schema.validate(req);
-}
 module.exports =router;

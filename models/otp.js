@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 const Joi = require('joi');
-
+//bit of in consistence as Joi crieteria is more strict to mongoose schema required statement
 const OTPSchema = new mongoose.Schema({
-	Phone:{
+	PhoneNumber:{
 		type:String,
 		required:true
 	},
@@ -13,14 +13,24 @@ const OTPSchema = new mongoose.Schema({
 });
 const Otp = mongoose.model('Otp',OTPSchema);
 
-
-function validateOTP(otp){
+//helper for verify login OTP
+function validatelogin(req){
 	const schema=Joi.object({
-	Phone:Joi.string().min(10).required(),
-	OTP:Joi.string().min(4).required()
+	PhoneNumber:Joi.string().regex(/^[0-9]{10}$/).messages({'string.pattern.base': `Phone number must have 10 digits.`}).required(),
+	OTP:Joi.string().regex(/^[0-9]{4}$/).messages({'string.pattern.base': `OTP  must have 4 digits.`}).required(),
+
 	});
-	return schema.validate(otp);
+	return schema.validate(req);
 }
 
-exports.validate =validateOTP;
+//helper function used to validate input for generateOTP
+function validateNumber(req){
+	const schema=Joi.object({
+	PhoneNumber:Joi.string().regex(/^[0-9]{10}$/).messages({'string.pattern.base': `Phone number must have 10 digits.`}).required()
+	});
+	return schema.validate(req);
+}
+
+exports.validatelogin =validatelogin;
+exports.validateNumber =validateNumber;
 module.exports.Otp =Otp;

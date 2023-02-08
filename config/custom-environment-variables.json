@@ -1,4 +1,7 @@
 {
-	"password":"kbook_password",
-	"jwtPrivateKey":"kbook_jwtPrivateKey"
+	"jwtPrivateKey":"settle_jwtPrivateKey",
+	"db":"settle_db",
+	"bucketName":"settle_bucketName",
+	"AWSSecretKey":"settle_AWSSecretKey",
+	"AWSAccessKey":"settle_AWSAccessKey"
 }

@@ -1,4 +1,4 @@
 {
-	"name":"kbook - development",
-	"mail":"dev@gmail.com"
+	"name":"Settle - development",
+	"localdb":"mongodb://localhost/playground"
 }

@@ -7,9 +7,7 @@ module.exports =function(){
 	//standardize by throw error so single way 
 	throw new Error('FATAL ERROR jwt private key not defined');
 }
-//configuration
-winston.info('app name: '+ config.get('name'));
-winston.info('mail server: '+ config.get('mail'));
-winston.info('password '+config.get('password'))
 
+//configuration 
+winston.info('app name: '+ config.get('name'));
 }

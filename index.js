@@ -4,25 +4,35 @@ const express = require('express');
 const app = express();
 const winston = require('winston');
 
-require('./startup/logging');
+require('./startup/logging')();
 require('./startup/config')();
-require('./startup/routes')(app);
-require('./startup/db')();
-require('./startup/validate');
-require('./startup/prod')(app);//make it condition
 
-const morgan = require('morgan');
-//set DEBUG=app:startup
-if(app.get('env')=== 'development'){//set by NODE_ENV
+//set DEBUG=app:startup,set by NODE_ENV=development
+if((app.get('env')=== 'development')||(app.get('env')=== 'test') ){
+	const morgan = require('morgan');
 	app.use(morgan('tiny'));
 	startupDebugger('Morgan enabled...')
 }
 
+require('./startup/routes')(app);
+require('./startup/db')();
+require('./startup/validate')();
 
+if(app.get('env')=== 'production'){
+require('./startup/prod')(app);
+
+}
+
+
+
+//not work as already return otherwise move this code it will show authentication
+/*
 app.use(function(req,res,next){
-	winston.log('authentication ...');
+	winston.info('authentication ...');
 	next();
 });
+*/
 
 const port = process.env.PORT||3000
-app.listen(port,()=>winston.info(`listening to port ${port}...`));
+const server = app.listen(port,()=>winston.info(`listening to port ${port}...`));
+module.exports = server

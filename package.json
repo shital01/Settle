@@ -1,23 +1,24 @@
 {
-  "name": "kbook",
+  "name": "settle",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
-    "start":"node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "set NODE_ENV=production&&node index.js",
+    "dev": "set DEBUG=app:*&&set NODE_ENV=development&& nodemon index.js",
+    "test": "set NODE_ENV=test&&set PORT=0 && jest --watchAll --verbose --coverage "
   },
-  "engines":{
-    "node":"18.13.0"
+  "engines": {
+    "node": "18.13.0"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "aws-sdk": "^2.1302.0",
+    "axios": "^1.2.6",
     "bcrypt": "^5.1.0",
     "compression": "^1.7.4",
     "config": "^3.3.8",
-    "debug": "^4.3.4",
     "express": "^4.18.2",
     "express-async-errors": "^3.1.1",
     "helmet": "^6.0.1",
@@ -26,8 +27,18 @@
     "jsonwebtoken": "^9.0.0",
     "lodash": "^4.17.21",
     "mongoose": "^6.8.3",
-    "morgan": "^1.10.0",
+    "supertest": "^6.3.3",
+    "uuid": "^9.0.0",
     "winston": "^3.8.2",
-    "winston-mongodb": "^3.0.2"
-  }
+    "winston-mongodb": "^3.0.0"
+  },
+  "devDependencies": {
+    "debug": "^4.3.4",
+    "jest": "^29.4.1",
+    "morgan": "^1.10.0"
+  },
+  "directories": {
+    "test": "tests"
+  },
+  "description": ""
 }
