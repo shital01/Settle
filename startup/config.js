@@ -1,5 +1,5 @@
 const config = require('config');
-const winston = require('winston');
+const logger = require('../startup/logging');
 module.exports =function(){
 	if(!config.get('jwtPrivateKey')){
 	//console.log("FATAL ERROR jwt private key not defined");
@@ -9,5 +9,5 @@ module.exports =function(){
 }
 
 //configuration 
-winston.info('app name: '+ config.get('name'));
+logger.info('app name: '+ config.get('name'));
 }

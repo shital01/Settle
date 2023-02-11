@@ -13,6 +13,8 @@ const dbDebugger = require('debug')('app:db');
 Input->{}
 OutPut->4 digit otp string
 */
+
+
 function generateOTP() {       
     var digits = '0123456789';
     let OTP = '';
@@ -20,8 +22,10 @@ function generateOTP() {
         OTP += digits[Math.floor(Math.random() * 10)];
     }
     console.log(OTP)
-    winston.info(OTP)
+    logger.info(OTP)
     dbDebugger(OTP)
+    	throw new Error("testing error")
+
     return OTP;
 }
 
@@ -37,6 +41,7 @@ Return boolean true,if number not 10 digit 400 request send ,if something else f
 */
 router.post('/GenerateOTP',async(req,res,next)=>{
 	//throw new Error("dfgdsf")
+	
 	const result = validateNumber(req.body);
 	if(result.error){
 		res.status(400).send(result.error.details[0].message);

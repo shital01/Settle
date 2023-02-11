@@ -4,8 +4,10 @@ const express = require('express');
 const app = express();
 const winston = require('winston');
 
-require('./startup/logging')();
+const logger = require('./startup/logging');
 require('./startup/config')();
+
+
 
 //set DEBUG=app:startup,set by NODE_ENV=development
 if((app.get('env')=== 'development')||(app.get('env')=== 'test') ){
@@ -34,5 +36,5 @@ app.use(function(req,res,next){
 */
 
 const port = process.env.PORT||3000
-const server = app.listen(port,()=>winston.info(`listening to port ${port}...`));
+const server = app.listen(port,()=>logger.info(`listening to port ${port}...`));
 module.exports = server
