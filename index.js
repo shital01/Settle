@@ -7,7 +7,10 @@ const winston = require('winston');
 const logger = require('./startup/logging');
 require('./startup/config')();
 
-
+process.on('unhandledRejections',(ex) =>{
+	console.log(ex)
+	throw ex;//convert unhandled to uncaught for winston
+});
 
 //set DEBUG=app:startup,set by NODE_ENV=development
 if((app.get('env')=== 'development')||(app.get('env')=== 'test') ){
