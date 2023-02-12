@@ -8,7 +8,7 @@ describe('/api/otps',()=>{
 
 	beforeEach(()=>{server = require('../../index')})
 	afterEach(async()=>{
-		//await Otp.remove({});
+		await Otp.remove({});
 		await server.close();
 		});
 

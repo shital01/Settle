@@ -1,6 +1,5 @@
 {
 	"name":"Settle",
-	"db":"mongodb://localhost/playground",
 	"jwtPrivateKey":"123",
 	"bucketName":"1",
 	"AWSAccessKey":"2",

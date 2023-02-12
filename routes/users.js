@@ -29,9 +29,11 @@ router.put('/UpdateProfile',auth,async(req,res)=>{
 		res.status(400).send(result.error.details[0].message);
 		return;
 	}
-	const user = await User.findByIdAndUpdate(req.user._id,req.body);
+	let user = await User.findById(req.user._id);//for token regeneration hence not one lien do
 	if(!user) return res.status(400).send('No User Found')
-	res.send(req.body);
+	user = await user.save(req.body);
+	const token = user.generateAuthToken()
+	res.header('x-auth-token',token).send(user);
 });
 
 //friendsprofile pic

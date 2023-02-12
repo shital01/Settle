@@ -6,7 +6,7 @@ const router = express.Router();
 const {Otp,validatelogin,validateNumber} = require('../models/otp');
 const {User} = require('../models/user');
 
-const winston = require('winston');
+const logger = require('../startup/logging');
 const dbDebugger = require('debug')('app:db');
 
 /*helper function to generate OTP for generateOTP api
@@ -24,7 +24,6 @@ function generateOTP() {
     console.log(OTP)
     logger.info(OTP)
     dbDebugger(OTP)
-    	throw new Error("testing error")
 
     return OTP;
 }
@@ -40,7 +39,6 @@ send SMS to user Phone Number
 Return boolean true,if number not 10 digit 400 request send ,if something else fail like database saving then 500 request
 */
 router.post('/GenerateOTP',async(req,res,next)=>{
-	//throw new Error("dfgdsf")
 	
 	const result = validateNumber(req.body);
 	if(result.error){
@@ -101,7 +99,7 @@ router.post('/VerifyOTP',async(req,res)=>{
 	user = new User({PhoneNumber:req.body.PhoneNumber});
 	const newuser = await user.save();
 	const token = newuser.generateAuthToken()
-	res.header('x-auth-token'[token]).send(user);
+	res.header('x-auth-token',token).send(user);
 });
 
 module.exports =router;
