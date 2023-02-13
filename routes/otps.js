@@ -53,8 +53,9 @@ router.post('/GenerateOTP',async(req,res,next)=>{
 	const salt = await bcrypt.genSalt(10);
 	otp.OTP = await bcrypt.hash(otp.OTP,salt)
 	await otp.save();
-	//sendSMS	
-	res.send(true)
+	//sendSMS
+	res.send({OTP})	
+	//res.send(true)
 });
 /*
 Input->PhoneNumber(10 digit String),OTP(4 digit String)
