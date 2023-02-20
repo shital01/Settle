@@ -31,6 +31,16 @@ function validateNumber(req){
 	return schema.validate(req);
 }
 
+
+//
+function validateNumbers(req){
+	const schema=Joi.object({
+	PhoneNumbers:Joi.array().items(Joi.string().regex(/^[0-9]{10}$/).messages({'string.pattern.base': `Phone number must have 10 digits.`}).required())
+	});
+	return schema.validate(req);
+}
 exports.validatelogin =validatelogin;
 exports.validateNumber =validateNumber;
+exports.validateNumbers =validateNumbers;
+
 module.exports.Otp =Otp;

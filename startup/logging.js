@@ -1,7 +1,7 @@
 const config = require('config');
 const winston = require('winston');
 require	('express-async-errors');
-
+require('winston-mongodb');
 const { combine, timestamp, json, errors } = winston.format;
 
 //exception handle 
@@ -10,8 +10,11 @@ const logger = winston.createLogger({
   level: process.env.LOG_LEVEL || 'info',
   format: combine(errors({ stack: true }), timestamp(), json()),
   transports: [
-   new winston.transports.File({ filename: 'error.log', level: 'error' }),
-    new winston.transports.File({ filename: 'combined.log' })],
+    new winston.transports.File({ filename: 'combined.log' }),
+   winston.add(new winston.transports.MongoDB({ db: config.get('db'), level: 'error',options:{useUnifiedTopology:true }})),
+
+],
+
   exceptionHandlers: [
     new winston.transports.File({ filename: 'exception.log' }),
   ],

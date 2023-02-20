@@ -90,14 +90,16 @@ router.post('/VerifyOTP',async(req,res)=>{
 		const validotp =await bcrypt.compare(req.body.OTP,otps[0].OTP);
 		if(!validotp) return res.status(404).send('Invalid OTP');
 		const token = user.generateAuthToken();
-		return res.header('x-auth-token',token).send(_.pick(user,['_id','Name','PhoneNumber']));
+		return res.header('x-auth-token',token).send(user);
 	}
 	//id is same order as date hence
 	const otps = await Otp.find({PhoneNumber:req.body.PhoneNumber}).sort({_id:-1})
 	if(otps.length === 0) return res.status(404).send('Invalid OTP..');
 	const validotp =await bcrypt.compare(req.body.OTP,otps[0].OTP)
 	if(!validotp) return res.status(404).send('Invalid OTP');
-	user = new User({PhoneNumber:req.body.PhoneNumber});
+	req.body.Name="";
+	req.body.Profile="";
+	user = new User(req.body);
 	const newuser = await user.save();
 	const token = newuser.generateAuthToken()
 	res.header('x-auth-token',token).send(user);

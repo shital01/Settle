@@ -5,7 +5,7 @@ const Joi = require('joi');
 const config = require('config');
 const {User} = require('../models/user');
 const auth =require('../middleware/auth');
-const {validateNumber} = require('../models/otp');
+const {validateNumber,validateNumbers} = require('../models/otp');
 
 /*
 Input->
@@ -31,15 +31,15 @@ router.put('/UpdateProfile',auth,async(req,res)=>{
 	}
 	let user = await User.findById(req.user._id);//for token regeneration hence not one lien do
 	if(!user) return res.status(400).send('No User Found')
-	if(req.body.Name){user.Name=req.body.Name;}
-	if(req.body.Profile){user.Profile=req.body.Profile}
-	const user2 = await user.save(req.body);
+	user.Name=req.body.Name;
+	user.Profile =req.body.Profile;
+	const user2 = await user.save();
 	const token = user2.generateAuthToken()
 	res.header('x-auth-token',token).send(user2);
 });
 
-//friendsprofile pic
-router.get('/FriendsProfile',auth,async(req,res)=>{
+//friendprofile pic
+router.get('/FriendProfile',auth,async(req,res)=>{
 	const result = validateNumber(req.body);
 	if(result.error){
 		res.status(400).send(result.error.details[0].message);
@@ -49,6 +49,22 @@ router.get('/FriendsProfile',auth,async(req,res)=>{
 	if(user.length===0) return res.status(400).send('No User exits')
 	if(!user[0].Profile) return res.status(400).send('No Profile Picture')
 	res.send(user[0]);
+})
+
+
+
+
+//friendsprofile pic
+router.get('/FriendsProfile',auth,async(req,res)=>{
+	const result = validateNumbers(req.body);
+	if(result.error){
+		res.status(400).send(result.error.details[0].message);
+		return;
+	}
+	const users = await User.find({PhoneNumber: { $in: req.body.PhoneNumbers}}).select("PhoneNumber Profile Name")
+	if(users.length===0) return res.status(400).send('No User exits')
+	//if(!user[0].Profile) return res.status(400).send('No Profile Picture')
+	res.send(users);
 })
 
 
