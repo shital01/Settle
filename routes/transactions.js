@@ -69,6 +69,20 @@ router.post('/',auth,async(req,res)=>{
 	res.send(output);
 });
 /*
+
+Attach to firebase Account
+Store Token
+Exponent Try ?
+
+To one ,to few,To channel,To All
+*/
+
+
+//find User token from ReceiverPhoneNumber
+//Create NotificationMessage Body
+//SendNotification
+
+/*
 Input->TransactionId(ObjectID),Amount(Integer).......
 Output->New Transaction Object
 Procedure->validate Inputs(otherwise 400 with message)

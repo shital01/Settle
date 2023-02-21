@@ -70,8 +70,8 @@ router.get('/FriendsProfile',auth,async(req,res)=>{
 
 function validateUpdateUser(user){
 	const schema=Joi.object({
-	Name:Joi.string(),
-	Profile:Joi.string()
+	Name:Joi.string().allow(null, ''),
+	Profile:Joi.string().allow(null, '')
 	});
 	return schema.validate(user);
 }
