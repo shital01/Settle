@@ -64,6 +64,7 @@ router.post('/',auth,async(req,res)=>{
 		res.status(400).send(result.error.details[0].message);
 		return;
 	}
+	if(!req.body.isloan){req.body.Amount=-req.body.Amount}
 	const transaction = new Transaction(req.body);
 	const output = await transaction.save();
 	res.send(output);
@@ -75,6 +76,7 @@ Store Token
 Exponent Try ?
 
 To one ,to few,To channel,To All
+parallel the code
 */
 
 
@@ -102,6 +104,10 @@ router.put('/',auth,async(req,res)=>{
 	if(!transaction) return res.status(400).send('Transaction doesnot exits with given Id');
 	if(!transaction.SenderID.equals(req.user._id)) return res.status(403).send('Not Access for updating');
 	req.body.UpdatedDate=new Date();
+	if('isloan' in req.body){
+		if(!req.body.loan){req.body.Amount=-transaction.Amount;}
+		req.body.Amount=transaction.Amount;
+	}
 	//findbyid and update return new or old nto normal update
 	const mresult = await transaction.updateOne(req.body);
 	res.send(mresult);
@@ -129,4 +135,63 @@ router.delete('/',auth,async(req,res)=>{
 	res.send(result1);
 	});
 
+
+/*
+Input->Transaction id as parameter
+send x-auth-token
+Output->Transaction id of deleted object
+Procedure->validate header
+validate input
+delete transaction check is it allowed?
+return deleted object id  or validation error or if already deleted then 400 or if nto allowed then 403 
+*/
+router.delete('/delete',auth,async(req,res)=>{
+	const result = validateDeleteTransaction({"TransactionId":req.body.id,"SenderID":req.user._id})
+	if(result.error){
+		res.status(400).send(result.error.details[0].message);
+		return;
+	}
+	const result1 =await Transaction.findById(req.body.id);
+	if(!result1) return res.status(400).send('Already Deleted Transaction');
+	if(!result1.SenderID.equals(req.user._id)) return res.status(403).send('Not Access for deleting');
+	req.body.deleteFlag=true;
+	req.body.UpdatedDate=new Date();
+	//findbyid and update return new or old nto normal update
+	const mresult = await transaction.updateOne(req.body);
+	res.send(mresult);
+
+
+	//result1.remove();
+	//res.send(result1);
+	});
+
+
+
+
+
 module.exports =router;
+
+
+/*
+// This registration token comes from the client FCM SDKs.
+const registrationToken = 'YOUR_REGISTRATION_TOKEN';
+//message.data,message.notification.title,message.notification.body
+const message = {
+  data: {
+    score: '850',
+    time: '2:45'
+  },
+  token: registrationToken
+};
+
+// Send a message to the device corresponding to the provided
+// registration token.
+getMessaging().send(message)
+  .then((response) => {
+    // Response is a message ID string.
+    console.log('Successfully sent message:', response);
+  })
+  .catch((error) => {
+    console.log('Error sending message:', error);
+  });
+  */

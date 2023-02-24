@@ -33,7 +33,7 @@ function validateTransaction(transaction){
 	ReceiverPhoneNumber:Joi.string().regex(/^[0-9]{10}$/).messages({'string.pattern.base': `Phone number must have 10 digits.`}).required(),
 	SenderPhoneNumber:Joi.string().regex(/^[0-9]{10}$/).messages({'string.pattern.base': `Phone number must have 10 digits.`}).required(),
 	Amount:Joi.number().integer().required(),
-	Notes:Joi.string(),
+	Notes:Joi.string().allow(null, ''),
 	AttachmentsPath:Joi.array().items(Joi.string())
 	});
 	return schema.validate(transaction);
@@ -49,7 +49,7 @@ function validateUpdateTransaction(transaction){
 	ReceiverPhoneNumber:Joi.string().regex(/^[0-9]{10}$/).messages({'string.pattern.base': `Phone number must have 10 digits.`}),
 	SenderPhoneNumber:Joi.string().regex(/^[0-9]{10}$/).messages({'string.pattern.base': `Phone number must have 10 digits.`}),
 	Amount:Joi.number().integer(),
-	Notes:Joi.string(),
+	Notes:Joi.string().allow(null, ''),
 	AttachmentsPath:Joi.array().items(Joi.string())
 	});
 	return schema.validate(transaction);
