@@ -106,7 +106,7 @@ router.put('/',auth,async(req,res)=>{
 	req.body.UpdatedDate=new Date();
 	if('isloan' in req.body){
 		if(!req.body.loan){req.body.Amount=-transaction.Amount;}
-		req.body.Amount=transaction.Amount;
+		else{req.body.Amount=transaction.Amount;}
 	}
 	//findbyid and update return new or old nto normal update
 	const mresult = await transaction.updateOne(req.body);
@@ -157,7 +157,7 @@ router.delete('/delete',auth,async(req,res)=>{
 	req.body.deleteFlag=true;
 	req.body.UpdatedDate=new Date();
 	//findbyid and update return new or old nto normal update
-	const mresult = await transaction.updateOne(req.body);
+	const mresult = await result1.updateOne(req.body);
 	res.send(mresult);
 
 

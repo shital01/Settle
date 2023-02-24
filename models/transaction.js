@@ -17,6 +17,7 @@ const TransactionSchema = new mongoose.Schema({
 	TransactionDate:Date,
 	UpdatedDate:{type:Date,default:new Date()},
 	Isloan:{type:Boolean,required:true},
+	deleteFlag:Boolean,
 	Notes:String,
 	AttachmentsPath:[{type:String}]
 });
@@ -28,6 +29,7 @@ function validateTransaction(transaction){
 	SenderName:Joi.string().min(3).required(),
 	ReceiverName:Joi.string().min(3).required(),
 	Isloan:Joi.boolean().required(),
+	deleteFlag:Joi.boolean(),
 	SenderID:Joi.objectId().required(),
 	TransactionDate:Joi.date().required(),
 	ReceiverPhoneNumber:Joi.string().regex(/^[0-9]{10}$/).messages({'string.pattern.base': `Phone number must have 10 digits.`}).required(),
@@ -44,6 +46,7 @@ function validateUpdateTransaction(transaction){
 	TransactionId:Joi.objectId().required(),
 	ReceiverName:Joi.string().min(3),
 	Isloan:Joi.boolean(),
+	deleteFlag:Joi.boolean(),
 	SenderID:Joi.objectId(),
 	TransactionDate:Joi.date(),
 	ReceiverPhoneNumber:Joi.string().regex(/^[0-9]{10}$/).messages({'string.pattern.base': `Phone number must have 10 digits.`}),
