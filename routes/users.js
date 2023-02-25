@@ -31,8 +31,8 @@ router.put('/UpdateProfile',auth,async(req,res)=>{
 	}
 	let user = await User.findById(req.user._id);//for token regeneration hence not one lien do
 	if(!user) return res.status(400).send('No User Found')
-	user.Name=req.body.Name;
-	user.Profile =req.body.Profile;
+	if(req.body.Name){user.Name=req.body.Name;}
+	if(req.body.Profile){user.Profile =req.body.Profile;}
 	const user2 = await user.save();
 	const token = user2.generateAuthToken()
 	res.header('x-auth-token',token).send(user2);

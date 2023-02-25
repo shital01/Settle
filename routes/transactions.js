@@ -154,10 +154,10 @@ router.delete('/delete',auth,async(req,res)=>{
 	const result1 =await Transaction.findById(req.body.id);
 	if(!result1) return res.status(400).send('Already Deleted Transaction');
 	if(!result1.SenderID.equals(req.user._id)) return res.status(403).send('Not Access for deleting');
-	req.body.deleteFlag=true;
-	req.body.UpdatedDate=new Date();
+	result1.deleteFlag=true;
+	result1.UpdatedDate=new Date();
 	//findbyid and update return new or old nto normal update
-	const mresult = await result1.updateOne(req.body);
+	const mresult = await result1.save(req.body);
 	res.send(mresult);
 
 
