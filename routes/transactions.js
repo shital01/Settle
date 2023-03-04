@@ -59,13 +59,14 @@ router.post('/',auth,async(req,res)=>{
 	req.body.SenderID=req.user._id;
 	req.body.SenderPhoneNumber = req.user.PhoneNumber;
 	req.body.SenderName=req.user.Name;
-	req.body.UpdatedDate=new Date();
 
 	const result = validate(req.body);
 	if(result.error){
 		res.status(400).send(result.error.details[0].message);
 		return;
 	}
+		req.body.UpdatedDate=new Date();
+
 	console.log(req.body.Isloan)
 	if(!req.body.Isloan){req.body.Amount=-req.body.Amount}
 	const transaction = new Transaction(req.body);
