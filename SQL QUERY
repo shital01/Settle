@@ -1,0 +1,120 @@
+FOR TOTALING OF TOTAL AMOUNT OF LOAN GIVEN OR RECIEVE
+
+SELECT SUM(AMOUNT),RECEIVERPHONENUMBER
+FROM TRANSACTIONS
+GROUP BY RECEIVERPHONENUMBER;
+
+SELECT SUM(AMOUNT),SENDERPHONENUMBER
+FROM TRANSACTIONS
+GROUP BY SENDERPHONENUMBER;
+
+=============
+FOR GETTING LIST OF ALL FRIENDS WHOSE TRANSACTION YOU ADDED OR THEY ADDED
+
+SELECT RECEIVERPHONENUMBER
+FROM TRANSACTIONS
+GROUP BY RECEIVERPHONENUMBER;
+
+SELECT SENDERPHONENUMBER
+FROM TRANSACTIONS
+GROUP BY SENDERPHONENUMBER
+
+use this result to query friendsprofile
+===============
+FOR GETTING LATEST ENTRY ADDED BY USERS
+
+SELECT RECEIVERPHONENUMBER,SENDERPHONENUMBER,SUM(AMOUNT)
+
+FROM TRANSACTIONS
+WHERE RECEIVERPHONENUMBER=MYPHONENUMBER
+GROUP BY RECEIVERPHONENUMBER,SENDERPHONENUMBER
+
+SELECT RECEIVERPHONENUMBER,SENDERPHONENUMBER,MAX(UPDATEDDATE)
+FROM TRANSACTIONS
+WHERE SENDERPHONENUMBER=MYPHONENUMBER
+GROUP BY RECEIVERPHONENUMBER,SENDERPHONENUMBER
+ORDER BY MAX(UPDATEDDATE)
+
+
+CASE WHEN SenderPhoneNumber = '1234567890' THEN Amount 
+            WHEN ReceiverPhoneNumber = '1234567890' THEN -Amount 
+ END AS Amount
+========
+getting complete total(group A query)
+getting all users/friends(gruop B query)
+getting latest transaction(group C)
+getting total of each user(group C)
+===========
+SELECT RECEIVERPHONENUMBER,SENDERPHONENUMBER,MAX(UPDATEDDATE)
+FROM TRANSACTIONS
+GROUP BY RECEIVERPHONENUMBER,SENDERPHONENUMBER
+ORDER BY MAX(UPDATEDDATE)
+
+WITH all_emp
+AS(
+SELECT CategoryId,SUPPLIERID,MAX(Price)
+FROM Products
+WHERE CategoryId=1
+GROUP BY CategoryId,SUPPLIERID
+ORDER BY MAX(Price)
+
+UNION ALL
+
+SELECT CategoryId,SUPPLIERID,MAX(Price)
+FROM Products
+WHERE SUPPLIERID=1
+GROUP BY CategoryId,SUPPLIERID
+ORDER BY MAX(Price)
+)
+SELECT * FROM all_emp
+
+
+SELECT RECEIVERPHONENUMBER,SENDERPHONENUMBER,SUM(AMOUNT)
+FROM TRANSACTIONS
+WHERE RECEIVERPHONENUMBER=MYPHONENUMBER
+GROUP BY RECEIVERPHONENUMBER,SENDERPHONENUMBER
+
+select username, friendname, 
+       case when username = 'R' then amount else -amount end as amount
+from table1
+where username = 'R' or friendname = 'R'
+
+SELECT CategoryId,Supplierid,SUM(Price)
+case when CategoryId =1 then Price else -Price end as Price
+FROM Products
+WHERE CategoryId=1 or SupplierId=1
+GROUP BY CategoryId,Supplierid
+
+
+SELECT CategoryId, supplierId, Price
+FROM Products
+UNION ALL
+SELECT SupplierId, CategoryId, -Price
+FROM Products
+
+
+SELECT CategoryId, supplierId, 
+       CASE WHEN CategoryId = 1 THEN Price 
+            WHEN supplierId = 1 THEN -Price 
+       END AS Price
+FROM Products
+WHERE CategoryId = 1 OR supplierId = 1
+=========
+
+
+SELECT SenderPhoneNumber, ReceiverPhoneNumber, 
+       CASE WHEN SenderPhoneNumber = '1234567890' THEN Amount 
+            WHEN ReceiverPhoneNumber = '1234567890' THEN -Amount 
+       END AS Amount
+FROM transactions
+WHERE SenderPhoneNumber = '1234567890' OR ReceiverPhoneNumber = '1234567890'
+
+
+
+select username, friendname, sum(amount)
+from ((select username, friendname, amount from table1
+      ) union all
+      (select friendname, username, - amount from table1
+      )
+     ) t
+group by username, friendname;
