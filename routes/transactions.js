@@ -10,7 +10,7 @@ Input->lastUpdatedDate(Date format and date of latest entry) along with auth tok
 Output->Objects of Transactions in sorted order
 Procedure->Query Using Phone Number and date to get info of transaction which are related to particular user and 
 */
-router.put('/',auth,async(req,res)=>{
+router.put('/fetchtransactions',auth,async(req,res)=>{
 	//throw new Error("hello")
 
 	const lastUpdatedDate = req.body.lastUpdatedDate;
