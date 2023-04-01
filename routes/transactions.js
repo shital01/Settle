@@ -113,7 +113,9 @@ router.put('/',auth,async(req,res)=>{
 		else{req.body.Amount=transaction.Amount;}
 	}
 	//findbyid and update return new or old nto normal update
-	const mresult = await transaction.updateOne(req.body);
+
+	transaction.set(req.body)
+	const mresult = await transaction.save();
 	res.send(mresult);
 });
 
