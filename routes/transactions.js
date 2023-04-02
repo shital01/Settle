@@ -65,8 +65,7 @@ router.post('/',auth,async(req,res)=>{
 		res.status(400).send(result.error.details[0].message);
 		return;
 	}
-		req.body.UpdatedDate=new Date();
-
+		req.body.UpdatedDate=new Date(new Date().getTime()+330*60*1000);
 	console.log(req.body.Isloan)
 	if(!req.body.Isloan){req.body.Amount=-req.body.Amount}
 	const transaction = new Transaction(req.body);
@@ -107,7 +106,7 @@ router.put('/',auth,async(req,res)=>{
 	const transaction = await Transaction.findById(req.body.TransactionId);
 	if(!transaction) return res.status(400).send('Transaction doesnot exits with given Id');
 	if(!transaction.SenderID.equals(req.user._id)) return res.status(403).send('Not Access for updating');
-	req.body.UpdatedDate=new Date();
+	req.body.UpdatedDate=new Date(new Date().getTime()+330*60*1000);
 	if('Isloan' in req.body){
 		if(!req.body.Isloan){req.body.Amount=-transaction.Amount;}
 		else{req.body.Amount=transaction.Amount;}
@@ -161,7 +160,7 @@ router.delete('/delete',auth,async(req,res)=>{
 	if(!result1) return res.status(400).send('Already Deleted Transaction');
 	if(!result1.SenderID.equals(req.user._id)) return res.status(403).send('Not Access for deleting');
 	result1.deleteFlag=true;
-	result1.UpdatedDate=new Date();
+	result1.UpdatedDate=new Date(new Date().getTime()+330*60*1000);
 	//findbyid and update return new or old nto normal update
 	const mresult = await result1.save(req.body);
 	res.send(mresult);

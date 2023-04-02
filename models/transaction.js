@@ -15,7 +15,7 @@ const TransactionSchema = new mongoose.Schema({
 	SenderPhoneNumber:{type:String,required:true},
 	Amount:{type:Number,required:true},
 	TransactionDate:Date,
-	UpdatedDate:{type:Date,default:new Date()},
+	UpdatedDate:{type:Date,default:new Date(new Date().getTime()+330*60*1000)},
 	Isloan:{type:Boolean,required:true},
 	deleteFlag:Boolean,
 	Notes:String,
