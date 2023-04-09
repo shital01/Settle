@@ -39,7 +39,7 @@ router.put('/UpdateProfile',auth,async(req,res)=>{
 });
 
 //friendprofile pic
-router.get('/FriendProfile',auth,async(req,res)=>{
+router.post('/FriendProfile',auth,async(req,res)=>{
 	const result = validateNumber(req.body);
 	if(result.error){
 		res.status(400).send(result.error.details[0].message);
@@ -55,7 +55,7 @@ router.get('/FriendProfile',auth,async(req,res)=>{
 
 
 //friendsprofile pic
-router.get('/FriendsProfile',auth,async(req,res)=>{
+router.post('/FriendsProfile',auth,async(req,res)=>{
 	const result = validateNumbers(req.body);
 	if(result.error){
 		res.status(400).send(result.error.details[0].message);
