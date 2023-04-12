@@ -4,8 +4,8 @@ Joi.objectId = require('joi-objectid')(Joi)
 const mongoose = require('mongoose');
 
 const TransactionSchema = new mongoose.Schema({
-	SenderName:{type:String,required:true,minlength:2},
-	ReceiverName:{type:String,required:true,minlength:2,lowercase:true},
+	SenderName:{type:String,required:true,minlength:1},
+	ReceiverName:{type:String,required:true,minlength:1,lowercase:true},
 	SenderID:{
 			type:mongoose.Schema.Types.ObjectId,
 			ref:'User',
@@ -26,8 +26,8 @@ const Transaction = mongoose.model('Transaction',TransactionSchema);
 
 function validateTransaction(transaction){
 	const schema=Joi.object({
-	SenderName:Joi.string().min(3).required(),
-	ReceiverName:Joi.string().min(3).required(),
+	SenderName:Joi.string().min(1).required(),
+	ReceiverName:Joi.string().min(1).required(),
 	Isloan:Joi.boolean().required(),
 	deleteFlag:Joi.boolean(),
 	SenderID:Joi.objectId().required(),
@@ -44,7 +44,7 @@ function validateTransaction(transaction){
 function validateUpdateTransaction(transaction){
 	const schema=Joi.object({
 	TransactionId:Joi.objectId().required(),
-	ReceiverName:Joi.string().min(3),
+	ReceiverName:Joi.string().min(1),
 	Isloan:Joi.boolean(),
 	deleteFlag:Joi.boolean(),
 	SenderID:Joi.objectId(),
