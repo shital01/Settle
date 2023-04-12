@@ -62,6 +62,7 @@ router.post('/',auth,async(req,res)=>{
 
 	const result = validate(req.body);
 	if(result.error){
+		dbDebugger(result.error.details[0].message)
 		res.status(400).send(result.error.details[0].message);
 		return;
 	}
