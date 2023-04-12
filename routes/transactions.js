@@ -63,7 +63,7 @@ router.post('/',auth,async(req,res)=>{
 	const result = validate(req.body);
 	if(result.error){
 		dbDebugger(result.error.details[0].message)
-		res.status(400).send(result.error.details[0]);
+		res.status(400).send({error:result.error.details[0],response:""});
 		return;
 	}
 		req.body.UpdatedDate=new Date(new Date().getTime()+330*60*1000);
@@ -71,7 +71,7 @@ router.post('/',auth,async(req,res)=>{
 	if(!req.body.Isloan){req.body.Amount=-req.body.Amount}
 	const transaction = new Transaction(req.body);
 	const output = await transaction.save();
-	res.send(output);
+	res.send({error:"",response:output});
 });
 /*
 
