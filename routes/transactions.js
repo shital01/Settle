@@ -16,7 +16,8 @@ router.put('/fetchtransactions',auth,async(req,res)=>{
 	const lastUpdatedDate = req.body.lastUpdatedDate;
 	const result = validateRequestTransaction(req.body);
 	if(result.error){
-		res.status(400).send(result.error.details[0].message);
+		dbDebugger(result.error.details[0].message)
+		res.status(400).send({error:result.error.details[0],response:null});
 		return;
 	}
 		//watch performance of this
@@ -25,7 +26,7 @@ router.put('/fetchtransactions',auth,async(req,res)=>{
 	.find({$and:[{$or:[{SenderPhoneNumber:{$eq: PhoneNumber}},{ReceiverPhoneNumber:{$eq: PhoneNumber}}]},{UpdatedDate:{$gt:lastUpdatedDate}}]})//watch performance of this
 	//.sort({Date:1})
 	//dbDebugger(transactions);
-	res.send(transactions);
+	res.send({error:null,response:transactions});
 		
 });
 
@@ -40,8 +41,8 @@ router.get('/All',auth,async(req,res)=>{
 	//watch performance of this
 	.find({$or:[{SenderPhoneNumber:{$eq: PhoneNumber}},{ReceiverPhoneNumber:{$eq: PhoneNumber}}]})//watch performance of this
 	//.sort({Date:1})
-	dbDebugger(transactions);
-	res.send(transactions);
+	//dbDebugger(transactions);
+	res.send({error:null,response:transactions});
 		
 });
 
@@ -63,7 +64,7 @@ router.post('/',auth,async(req,res)=>{
 	const result = validate(req.body);
 	if(result.error){
 		dbDebugger(result.error.details[0].message)
-		res.status(400).send({error:result.error.details[0],response:""});
+		res.status(400).send({error:result.error.details[0],response:null});
 		return;
 	}
 		req.body.UpdatedDate=new Date(new Date().getTime()+330*60*1000);
@@ -71,7 +72,7 @@ router.post('/',auth,async(req,res)=>{
 	if(!req.body.Isloan){req.body.Amount=-req.body.Amount}
 	const transaction = new Transaction(req.body);
 	const output = await transaction.save();
-	res.send({error:"",response:output});
+	res.send({error:null,response:output});
 });
 /*
 
@@ -99,14 +100,15 @@ update and return
 router.put('/',auth,async(req,res)=>{
 	const result = validateUpdateTransaction(req.body);
 	if(result.error){
-		res.status(400).send(result.error.details[0].message);
+		dbDebugger(result.error.details[0].message)
+		res.status(400).send({error:result.error.details[0],response:null});
 		return;
 	}
 	//Query first findbyId()...modify and save()--if any coniditoin before update
 	//update first optional to get updated document....if not need then this 
 	const transaction = await Transaction.findById(req.body.TransactionId);
-	if(!transaction) return res.status(400).send('Transaction doesnot exits with given Id');
-	if(!transaction.SenderID.equals(req.user._id)) return res.status(403).send('Not Access for updating');
+	if(!transaction) return res.status(400).send({error:{message:'Transaction doesnot exits with given Id'},response:null});
+	if(!transaction.SenderID.equals(req.user._id)) return res.status(403).send({error:{message:'Not Access for updating'},response:null});
 	req.body.UpdatedDate=new Date(new Date().getTime()+330*60*1000);
 	if('Isloan' in req.body){
 		if(!req.body.Isloan){req.body.Amount=-transaction.Amount;}
@@ -116,7 +118,7 @@ router.put('/',auth,async(req,res)=>{
 
 	transaction.set(req.body)
 	const mresult = await transaction.save();
-	res.send(mresult);
+	res.send({error:null,response:mresult});
 });
 
 /*
@@ -131,14 +133,15 @@ return deleted object id  or validation error or if already deleted then 400 or 
 router.delete('/',auth,async(req,res)=>{
 	const result = validateDeleteTransaction({"TransactionId":req.body.id,"SenderID":req.user._id})
 	if(result.error){
-		res.status(400).send(result.error.details[0].message);
+		dbDebugger(result.error.details[0].message)
+		res.status(400).send({error:result.error.details[0],response:null});	
 		return;
 	}
 	const result1 =await Transaction.findById(req.body.id);
-	if(!result1) return res.status(400).send('Already Deleted Transaction');
-	if(!result1.SenderID.equals(req.user._id)) return res.status(403).send('Not Access for deleting');
+	if(!result1) return res.status(400).send({error:{message:'Already Deleted Transaction'},response:null});
+	if(!result1.SenderID.equals(req.user._id)) return res.status(403).send({error:{message:'Not Access for deleting'},response:null});
 	result1.remove();
-	res.send(result1);
+	res.send({error:null,response:result1});
 	});
 
 
@@ -154,17 +157,18 @@ return deleted object id  or validation error or if already deleted then 400 or 
 router.delete('/delete',auth,async(req,res)=>{
 	const result = validateDeleteTransaction({"TransactionId":req.body.id,"SenderID":req.user._id})
 	if(result.error){
-		res.status(400).send(result.error.details[0].message);
+		dbDebugger(result.error.details[0].message)
+		res.status(400).send({error:result.error.details[0],response:null});		
 		return;
 	}
 	const result1 =await Transaction.findById(req.body.id);
 	if(!result1) return res.status(400).send('Already Deleted Transaction');
-	if(!result1.SenderID.equals(req.user._id)) return res.status(403).send('Not Access for deleting');
+	if(!result1.SenderID.equals(req.user._id)) return res.status(403).send({error:{message:'Not Access for deleting'},response:null});
 	result1.deleteFlag=true;
 	result1.UpdatedDate=new Date(new Date().getTime()+330*60*1000);
 	//findbyid and update return new or old nto normal update
 	const mresult = await result1.save(req.body);
-	res.send(mresult);
+	res.send({error:null,response:mresult});
 
 
 	//result1.remove();

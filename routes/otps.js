@@ -21,9 +21,9 @@ function generateOTP() {
     for (let i = 0; i < 4; i++ ) {
         OTP += digits[Math.floor(Math.random() * 10)];
     }
-    console.log(OTP)
-    logger.info(OTP)
-    dbDebugger(OTP)
+    //console.log(OTP)
+    //logger.info(OTP)
+    //dbDebugger(OTP)
 
     return OTP;
 }
@@ -42,7 +42,9 @@ router.post('/GenerateOTP',async(req,res,next)=>{
 	
 	const result = validateNumber(req.body);
 	if(result.error){
-		res.status(400).send(result.error.details[0].message);
+		dbDebugger(result.error.details[0].message)
+		res.status(400).send({error:result.error.details[0],response:null});
+		//res.status(400).send(result.error.details[0].message);
 		return;
 	}
 	const OTP =generateOTP();
@@ -54,7 +56,7 @@ router.post('/GenerateOTP',async(req,res,next)=>{
 	otp.OTP = await bcrypt.hash(otp.OTP,salt)
 	await otp.save();
 	//sendSMS
-	res.send({OTP})	
+	res.send({error:null,response:{OTP}})	
 	//res.send(true)
 });
 /*
@@ -76,7 +78,10 @@ If something else fail like database saving then Response send with code 500 and
 router.post('/VerifyOTP',async(req,res)=>{
 	const result = validatelogin(req.body);
 	if(result.error){
-		res.status(400).send(result.error.details[0].message);
+		dbDebugger(result.error.details[0].message)
+		res.status(400).send({error:result.error.details[0],response:null});
+		//res.status(400).send(result.error.details[0].message);
+
 		return;
 	}
 	let user = await User.findOne({PhoneNumber:req.body.PhoneNumber});
@@ -86,23 +91,23 @@ router.post('/VerifyOTP',async(req,res)=>{
 		const otps = await Otp
 		.find({PhoneNumber:req.body.PhoneNumber})
 		.sort({_id:-1})
-		if(otps.length === 0) return res.status(404).send('Invalid OTP');
+		if(otps.length === 0) return res.status(404).send({error:{message:'Invalid OTP'},response:null});
 		const validotp =await bcrypt.compare(req.body.OTP,otps[0].OTP);
-		if(!validotp) return res.status(404).send('Invalid OTP');
+		if(!validotp) return res.status(404).send({error:{message:'Invalid OTP'},response:null});
 		const token = user.generateAuthToken();
-		return res.header('x-auth-token',token).send(user);
+		return res.header('x-auth-token',token).send({error:null,response:user});
 	}
 	//id is same order as date hence
 	const otps = await Otp.find({PhoneNumber:req.body.PhoneNumber}).sort({_id:-1})
-	if(otps.length === 0) return res.status(404).send('Invalid OTP..');
+	if(otps.length === 0) return res.status(404).send({error:{message:'Invalid OTP'},response:null});
 	const validotp =await bcrypt.compare(req.body.OTP,otps[0].OTP)
-	if(!validotp) return res.status(404).send('Invalid OTP');
+	if(!validotp) return res.status(404).send({error:{message:'Invalid OTP'},response:null});
 	req.body.Name="";
 	req.body.Profile="";
 	user = new User(req.body);
 	const newuser = await user.save();
 	const token = newuser.generateAuthToken()
-	res.header('x-auth-token',token).send(user);
+	res.header('x-auth-token',token).send({error:null,response:user});
 });
 
 module.exports =router;
