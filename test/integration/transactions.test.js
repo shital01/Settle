@@ -85,18 +85,21 @@ expect(Object.keys(res.body)).toEqual(
 			token ='';
 			const res = await exec();
 			expect(res.status).toBe(401);
+			expect(res.body.response).toBe(null);
 		});
 		it('should return 400 for invalid token',async() =>{
 			token ='1';
 			const res = await exec();
 			expect(res.status).toBe(400);
+			expect(res.body.response).toBe(null);
 		});
 		it('should return all transactions',async() =>{
 			await Transaction.collection.insertMany([transaction1,transaction2,transaction3,transaction4])
 			const res = await exec();
 			expect(res.status).toBe(200);
-			expect(res.body.length).toBe(3);
-			expect(Object.keys(res.body[0])).toEqual(
+			expect(res.body.error).toBe(null);
+			expect(res.body.response.length).toBe(3);
+			expect(Object.keys(res.body.response[0])).toEqual(
 				expect.arrayContaining(['SenderName','SenderPhoneNumber','SenderID','ReceiverName','ReceiverPhoneNumber','Amount','Isloan','TransactionDate','_id',]))
 		});
 	});
@@ -152,7 +155,7 @@ expect(Object.keys(res.body)).toEqual(
 			//Happy Path
 			let exec = () => {
 			return  request(server)
-			.get('/api/transactions/')
+			.put('/api/transactions/fetchtransactions')
 			.set('x-auth-token',token)
 			.send({lastUpdatedDate})
 			}
@@ -169,16 +172,19 @@ expect(Object.keys(res.body)).toEqual(
 			token ='';
 			const res = await exec();
 			expect(res.status).toBe(401);
+			expect(res.body.response).toBe(null);
 		});
 		it('should return 400 for invalid token',async() =>{
 			token ='1';
 			const res = await exec();
 			expect(res.status).toBe(400);
+			expect(res.body.response).toBe(null);
 		});
 		it('should return 400 for invalid Date',async() =>{
 			lastUpdatedDate =null;
 			const res = await exec();
 			expect(res.status).toBe(400);
+			expect(res.body.response).toBe(null);
 		});
 		//it wont be running due to date
 		/*
@@ -219,51 +225,59 @@ expect(Object.keys(res.body)).toEqual(
 			token='';
 			const res = await exec();
 			expect(res.status).toBe(401);
+			expect(res.body.response).toBe(null);
 		})
 		//Path-02
 		it('should return 400 if invalid token ',async()=>{
 			token="123"
 			const res = await exec();
 			expect(res.status).toBe(400);
+			expect(res.body.response).toBe(null);
 		})
 		//Path-03
 		it('should return 400 if validation transaction failed due to name',async()=>{
 			ReceiverName = null;
 			const res = await exec();
 			expect(res.status).toBe(400);
+			expect(res.body.response).toBe(null);
 		})
 		//Path-04
 		it('should return 400 if validation transaction failed due to amount',async()=>{
 			Amount = "12da";
 			const res = await exec();
 			expect(res.status).toBe(400);
+			expect(res.body.response).toBe(null);
 		})
 		//Path-05
 		it('should return 400 if validation transaction failed due to Phone number',async()=>{
 			ReceiverPhoneNumber = "12";
 			const res = await exec();
 			expect(res.status).toBe(400);
+			expect(res.body.response).toBe(null);
 		})
 		//Path-06
 		it('should return 400 if validation transaction failed due to loan status',async()=>{
 			Isloan = "asd";
 			const res = await exec();
 			expect(res.status).toBe(400);
+			expect(res.body.response).toBe(null);
 		})
 		//Path-07
 		it('should return 400 if validation transaction failed due to date',async()=>{
 			TransactionDate = null;
 			const res = await exec();
 			expect(res.status).toBe(400);
+			expect(res.body.response).toBe(null);
 		})
 		//Path-08
 		it('should save and return transaction if valid transaction ',async()=>{
 			Notes="just a note"
 			const res = await exec();
 			expect(res.status).toBe(200);
+			expect(res.body.error).toBe(null);
 			//check the save part also 
 			//const transaction = await Transaction.find({SenderName:"name1"});
-			expect(Object.keys(res.body)).toEqual(
+			expect(Object.keys(res.body.response)).toEqual(
 				expect.arrayContaining(['SenderName','SenderPhoneNumber','ReceiverName','ReceiverPhoneNumber','Isloan','Amount']))
 		})
 	})
@@ -307,12 +321,14 @@ expect(Object.keys(res.body)).toEqual(
 			token='';
 			const res = await exec();
 			expect(res.status).toBe(401);
+			expect(res.body.response).toBe(null);
 		})
 		//Path -02
 		it('should return 400 if invalid token ',async()=>{
 			token="123"
 			const res = await exec();
 			expect(res.status).toBe(400);
+			expect(res.body.response).toBe(null);
 		})
 
 
@@ -322,6 +338,7 @@ expect(Object.keys(res.body)).toEqual(
 			payload={ReceiverName,TransactionId};
 			const res = await exec();
 			expect(res.status).toBe(400);
+			expect(res.body.response).toBe(null);
 		})
 		//Path-04
 		it('should return 400 if validation transaction failed due to amount',async()=>{
@@ -329,6 +346,7 @@ expect(Object.keys(res.body)).toEqual(
 			payload = {Amount,TransactionId}
 			const res = await exec();
 			expect(res.status).toBe(400);
+			expect(res.body.response).toBe(null);
 		})
 		//Path-05
 		it('should return 400 if validation transaction failed due to Phone number',async()=>{
@@ -336,6 +354,7 @@ expect(Object.keys(res.body)).toEqual(
 			payload={ReceiverPhoneNumber,TransactionId}
 			const res = await exec();
 			expect(res.status).toBe(400);
+			expect(res.body.response).toBe(null);
 		})
 		//Path-06
 		it('should return 400 if validation transaction failed due to loan status',async()=>{
@@ -343,6 +362,7 @@ expect(Object.keys(res.body)).toEqual(
 			payload= {Isloan,TransactionId}
 			const res = await exec();
 			expect(res.status).toBe(400);
+			expect(res.body.response).toBe(null);
 		})
 		//Path-07
 		it('should return 400 if validation transaction failed due to date',async()=>{
@@ -350,6 +370,7 @@ expect(Object.keys(res.body)).toEqual(
 			payload={TransactionDate,TransactionId}
 			const res = await exec();
 			expect(res.status).toBe(400);
+			expect(res.body.response).toBe(null);
 		})
 		//Path-08
 		it('should return 400 if validation transaction failed due to invalid ID',async()=>{
@@ -357,6 +378,7 @@ expect(Object.keys(res.body)).toEqual(
 			payload ={TransactionId}
 			const res = await exec();
 			expect(res.status).toBe(400);
+			expect(res.body.response).toBe(null);
 		})
 		//Path-09
 		it('should return 400  if transaction not found with given ID ',async()=>{
@@ -364,6 +386,7 @@ expect(Object.keys(res.body)).toEqual(
 			payload={TransactionId}
 			const res = await exec();
 			expect(res.status).toBe(400);
+			expect(res.body.response).toBe(null);
 		})
 		//Path-10
 		it('should return 403  if user forbidden to do this ',async()=>{
@@ -371,12 +394,14 @@ expect(Object.keys(res.body)).toEqual(
 			payload={TransactionId}
 			const res = await exec();
 			expect(res.status).toBe(403);
+			expect(res.body.response).toBe(null);
 		})
 		//Path-11
 		it('should update the transaction and return valid response if valid transaction ',async()=>{
 			payload={Amount,TransactionId}
 			const res = await exec();
 			expect(res.status).toBe(200);
+			expect(res.body.error).toBe(null);
 			const transactions = await Transaction.find()
 			expect(transactions[0].Amount).toBe(2);
 		})
@@ -417,35 +442,41 @@ expect(Object.keys(res.body)).toEqual(
 			token='';
 			const res = await exec();
 			expect(res.status).toBe(401);
+			expect(res.body.response).toBe(null);
 		})
 		//Path-02
 		it('should return 400 if invalid token ',async()=>{
 			token="123"
 			const res = await exec();
 			expect(res.status).toBe(400);
+			expect(res.body.response).toBe(null);
 		})
 		//Path-03
 		it('should return 400 if validation fails  ',async()=>{
 			TransactionId = "1"
 			const res = await  exec();
 			expect(res.status).toBe(400);
+			expect(res.body.response).toBe(null);
 		})
 		//Path-04
 		it('should return 400  if transaction not found with given ID/if Already delete ',async()=>{
 			TransactionId=userid;
 			const res = await exec();
 			expect(res.status).toBe(400);
+			expect(res.body.response).toBe(null);
 		})
 		//Path-05
 		it('should return 403  if user forbidden to do this ',async()=>{
 			token=token2;
 			const res = await exec();
 			expect(res.status).toBe(403);
+			expect(res.body.response).toBe(null);
 		})
 		//Path-06
 		it('should delete transaction if valid transaction ',async()=>{
 			const res = await exec();
 			expect(res.status).toBe(200);
+			expect(res.body.error).toBe(null);
 		})
 		
 	})	
@@ -485,36 +516,44 @@ expect(Object.keys(res.body)).toEqual(
 			token='';
 			const res = await exec();
 			expect(res.status).toBe(401);
+			expect(res.body.response).toBe(null);
 		})
 		//Path-02
 		it('should return 400 if invalid token ',async()=>{
 			token="123"
 			const res = await exec();
 			expect(res.status).toBe(400);
+			expect(res.body.response).toBe(null);
 		})
 		//Path-03
 		it('should return 400 if validation fails  ',async()=>{
 			TransactionId = "1"
 			const res = await  exec();
 			expect(res.status).toBe(400);
+			expect(res.body.response).toBe(null);
 		})
 		//Path-04
 		it('should return 400  if transaction not found with given ID/if Already delete ',async()=>{
 			TransactionId=userid;
 			const res = await exec();
 			expect(res.status).toBe(400);
+			expect(res.body.response).toBe(null);
+
 		})
 		//Path-05
 		it('should return 403  if user forbidden to do this ',async()=>{
 			token=token2;
 			const res = await exec();
+			expect(res.body.response).toBe(null);
 			expect(res.status).toBe(403);
 		})
 		//Path-06
 		it('should delete transaction if valid transaction ',async()=>{
 			const res = await exec();
 			expect(res.status).toBe(200);
+			expect(res.body.error).toBe(null);
 		})
+
 		
 	})	
 });

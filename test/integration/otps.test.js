@@ -27,11 +27,15 @@ describe('/api/otps',()=>{
 			PhoneNumber = "1";
 			const res = await exec();
 			expect(res.status).toBe(400);
+			expect(res.body.response).toBe(null);
+
 		})
 		//Path-02
 		it('should save otp if valid otp ',async()=>{
 			const res = await exec();
 			expect(res.status).toBe(200);
+			expect(res.body.error).toBe(null);
+
 		})
 	})
 	describe('POST/',()=>{
@@ -61,6 +65,8 @@ describe('/api/otps',()=>{
 			PhoneNumber="1";
 			const res = await exec();
 			expect(res.status).toBe(400);
+			expect(res.body.response).toBe(null);
+
 		})
 		//P2
 		it('should return 400 if validation OTP failed due to OTP invalid',async()=>{
@@ -68,6 +74,8 @@ describe('/api/otps',()=>{
 			PhoneNumber=PhoneNumber1;
 			const res = await exec();
 			expect(res.status).toBe(400);
+			expect(res.body.response).toBe(null);
+
 		})
 		//P3
 		it('should return 404 if wrong OTP as not requested no entry and also new user',async()=>{
@@ -75,6 +83,7 @@ describe('/api/otps',()=>{
 			PhoneNumber=PhoneNumber3;
 			const res = await exec();
 			expect(res.status).toBe(404);
+			expect(res.body.response).toBe(null);
 
 		})
 		//P-4
@@ -84,6 +93,7 @@ describe('/api/otps',()=>{
 			OTP="1111";
 			const res = await exec();
 			expect(res.status).toBe(404);
+			expect(res.body.response).toBe(null);
 
 		})
 		//P-5
@@ -92,7 +102,8 @@ describe('/api/otps',()=>{
 			PhoneNumber=PhoneNumber1;
 			const res = await exec();
 			expect(res.status).toBe(200);
-			expect(Object.keys(res.body)).toEqual(
+			expect(res.body.error).toBe(null);
+			expect(Object.keys(res.body.response)).toEqual(
 				expect.arrayContaining(['_id','PhoneNumber']))
 			//Add more checks of return and user saved or not
 			//Change header part also each info send
@@ -105,6 +116,7 @@ describe('/api/otps',()=>{
 			PhoneNumber=PhoneNumber3;
 			const res = await exec();
 			expect(res.status).toBe(404);
+			expect(res.body.response).toBe(null);
 
 		})
 		//P-7
@@ -116,6 +128,7 @@ describe('/api/otps',()=>{
 			OTP="1111";
 			const res = await exec();
 			expect(res.status).toBe(404);
+			expect(res.body.response).toBe(null);
 
 		})
 		//P-8
@@ -126,7 +139,8 @@ describe('/api/otps',()=>{
 			PhoneNumber=PhoneNumber1;
 			const res = await exec();
 			expect(res.status).toBe(200);
-			expect(Object.keys(res.body)).toEqual(
+			expect(res.body.error).toBe(null);
+			expect(Object.keys(res.body.response)).toEqual(
 				expect.arrayContaining(['_id','PhoneNumber']))
 			//Add more checks of return and user saved or not
 			//Change header part also each info send

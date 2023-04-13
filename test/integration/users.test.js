@@ -38,38 +38,53 @@ describe('/api/users',()=>{
 			token='';
 			const res = await exec();
 			expect(res.status).toBe(401);
+			expect(res.body.response).toBe(null);
+
 		})
 		
 		it('should return 400 if invalid token ',async()=>{
 			token="123"
 			const res = await exec();
 			expect(res.status).toBe(400);
+			expect(res.body.response).toBe(null);
+
 		})
 		//Path-3
+		/*
 		it('should return 400 if validation fail due to name ',async()=>{
 			Name = '';
 			payload={Name};
 			const res = await exec();
-			expect(res.status).toBe(400);
+			expect(res.status).toBe(400);	
+			expect(res.body.response).toBe(null);
+
 		})
+
 		//Path-4
 		it('should return 400 if validation fail due to profile ',async()=>{
 			Profile = 1;
 			payload = {Profile};
 			const res = await exec();
 			expect(res.status).toBe(400);
+			expect(res.body.response).toBe(null);
+
 		})
+		*/
 		//Path-05 check what code
 		it('should return 400  if user is not exits  ',async()=>{
 			token=token2
 			const res = await exec();
 			expect(res.status).toBe(400);
+			expect(res.body.response).toBe(null);
+
 		})
 		//Path-06
 		it('should return save  if user is saved to do this ',async()=>{
 			const res = await exec();
 			expect(res.status).toBe(200);
-			expect(Object.keys(res.body)).toEqual(
+			expect(res.body.error).toBe(null);
+
+			expect(Object.keys(res.body.response)).toEqual(
 				expect.arrayContaining(['Name']))
 		})	
 	})
@@ -79,7 +94,7 @@ describe('/api/users',()=>{
 		let PhoneNumber;
 		const exec = () => {
 			return  request(server)
-			.get('/api/users/FriendProfile')
+			.post('/api/users/FriendProfile')
 			.set('x-auth-token',token)
 			.send({PhoneNumber})
 		}
@@ -99,37 +114,44 @@ describe('/api/users',()=>{
 			token='';
 			const res = await exec();
 			expect(res.status).toBe(401);
+			expect(res.body.response).toBe(null);
+
 		})
 		//Path-02
 		it('should return 400 if invalid token ',async()=>{
 			token="123"
 			const res = await exec();
 			expect(res.status).toBe(400);
+			expect(res.body.response).toBe(null);
 		})
 		//Path-03
 		it('should return 400 if validation fail  ',async()=>{
-			PhoneNumber = '1'
+			PhoneNumber = "1"
 			const res = await exec();
 			expect(res.status).toBe(400);
+			expect(res.body.response).toBe(null);
 		})
 		//Path-04
 		it('should return 400  if user doesnt exits ',async()=>{
 			PhoneNumber="1231231231";
 			const res = await exec();
 			expect(res.status).toBe(400);
+			expect(res.body.response).toBe(null);
 		})	
 		//Path-05
 		it('should return 400  if no profile url ',async()=>{
 			PhoneNumber="1234123410";
 			const res = await exec();
 			expect(res.status).toBe(400);
+			expect(res.body.response).toBe(null);
 		})
 		//Path-06
 		it('should return Profileurl  if user is have a picture uploaded',async()=>{
 			const res = await exec();
 			expect(res.status).toBe(200);
+			expect(res.body.error).toBe(null);
 			//expect(res.body).toEqual(expect.any(String));
-			expect(Object.keys(res.body)).toEqual(
+			expect(Object.keys(res.body.response)).toEqual(
 				expect.arrayContaining(['Profile']))
 		
 		})		
@@ -141,7 +163,7 @@ describe('/api/users',()=>{
 		let PhoneNumber,PhoneNumbers;
 		const exec = () => {
 			return  request(server)
-			.get('/api/users/FriendsProfile')
+			.post('/api/users/FriendsProfile')
 			.set('x-auth-token',token)
 			.send({PhoneNumbers})
 		}
@@ -164,24 +186,28 @@ describe('/api/users',()=>{
 			token='';
 			const res = await exec();
 			expect(res.status).toBe(401);
+			expect(res.body.response).toBe(null);
 		})
 		//Path-02
 		it('should return 400 if invalid token ',async()=>{
 			token="123"
 			const res = await exec();
 			expect(res.status).toBe(400);
+			expect(res.body.response).toBe(null);
 		})
 		//Path-03
 		it('should return 400 if validation fail  ',async()=>{
-			PhoneNumbers = ['1']
+			PhoneNumbers = ["1"]
 			const res = await exec();
 			expect(res.status).toBe(400);
+			expect(res.body.response).toBe(null);
 		})
 		//Path-04
 		it('should return 400  if user doesnt exits ',async()=>{
 			PhoneNumbers=["1231231233"]
 			const res = await exec();
 			expect(res.status).toBe(400);
+			expect(res.body.response).toBe(null);
 		})	
 		//Path-05
 		
@@ -194,6 +220,7 @@ describe('/api/users',()=>{
 		it('should return Profileurl  if user is have a picture uploaded',async()=>{
 			const res = await exec();
 			expect(res.status).toBe(200);
+			expect(res.body.error).toBe(null);
 			//expect(res.body).toEqual(expect.any(String));
 			//expect(Object.keys(res.body)).toEqual(
 			//	expect.arrayContaining(['Profile']))

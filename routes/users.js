@@ -5,6 +5,8 @@ const Joi = require('joi');
 const config = require('config');
 const {User} = require('../models/user');
 const auth =require('../middleware/auth');
+const dbDebugger = require('debug')('app:db');
+
 const {validateNumber,validateNumbers} = require('../models/otp');
 
 /*
