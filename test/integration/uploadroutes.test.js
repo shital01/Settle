@@ -26,16 +26,22 @@ describe('/api/upload routes',()=>{
 			token ='';
 			const res = await exec();
 			expect(res.status).toBe(401);
+			expect(res.body.response).toBe(null);
+
 		});
 		it('should return 400 for invalid token',async() =>{
 			token ='1';
 			const res = await exec();
 			expect(res.status).toBe(400);
+			expect(res.body.response).toBe(null);
+
 		});
 		it('should return URL',async() =>{
 			const res = await exec();
 			//console.log(res.body.key+res.body.url)
 			expect(res.status).toBe(200);
+			expect(res.body.error).toBe(null);
+
 			//Put check on return type key and url as contain userid
 		});
 	});

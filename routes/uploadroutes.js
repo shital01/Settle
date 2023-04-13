@@ -19,7 +19,7 @@ router.get('/',auth,async(req,res)=>{
 			ContentType:'image/jpeg',
 			Key:key
 		},(err,url)=>{
-			res.send({key,url});
+			res.send({error:null,response:{key,url}});
 
 		})
 	})
