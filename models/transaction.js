@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 
 const TransactionSchema = new mongoose.Schema({
 	SenderName:{type:String,required:true,minlength:1},
-	ReceiverName:{type:String,required:true,minlength:1,lowercase:true},
+	ReceiverName:{type:String,required:true,minlength:1},
 	SenderID:{
 			type:mongoose.Schema.Types.ObjectId,
 			ref:'User',
