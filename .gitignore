@@ -3,3 +3,5 @@ coverage/
 helper/
 homebrew/
 *.log
+*.env
+amazon-cloudwatch-agent.*
