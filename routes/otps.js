@@ -8,7 +8,7 @@ const {User} = require('../models/user');
 
 const logger = require('../startup/logging');
 const dbDebugger = require('debug')('app:db');
-
+//just a test 
 /*helper function to generate OTP for generateOTP api
 Input->{}
 OutPut->4 digit otp string
