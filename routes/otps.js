@@ -58,7 +58,7 @@ router.post('/GenerateOTP',async(req,res,next)=>{
 	otp.OTP = await bcrypt.hash(otp.OTP,salt)
 	await otp.save();
 	//sendSMS
-	const result1 = await sendMessage("91"+req.body.PhoneNumber,OTP);
+	const result1 = await sendmessage("91"+req.body.PhoneNumber,OTP);
 	console.log(result1);
 	res.send({error:null,response:{OTP}})	
 	//res.send(true)

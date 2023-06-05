@@ -1,7 +1,7 @@
 const axios = require("axios");
 const config = require('config');
 
-async function sendMessage(send_to, message) {
+async function sendmessage(send_to, message) {
     const urlencodedmessage = encodeURIComponent(message);
     const options = {
       method: 'POST',
@@ -20,7 +20,6 @@ async function sendMessage(send_to, message) {
 
 
 
-
 const response = await axios(options);
     if (response.status === 200) {
       console.log('Message sent successfully');
@@ -28,5 +27,5 @@ const response = await axios(options);
     } 
 }
 
-module.exports = sendMessage;
+module.exports = sendmessage;
 
