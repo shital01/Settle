@@ -6,7 +6,7 @@ async function sendmessage(send_to, message) {
     const options = {
       method: 'POST',
       url: 'https://enterprise.smsgupshup.com/GatewayAPI/rest',
-      form: {
+      data: {
         method: 'sendMessage',
         send_to: send_to,
         msg: urlencodedmessage,
