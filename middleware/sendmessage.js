@@ -22,6 +22,7 @@ async function sendmessage(send_to, message) {
 
 const response = await axios(options);
     if (response.status === 200) {
+    	console.log(response);
       console.log('Message sent successfully');
       return true;
     } 
