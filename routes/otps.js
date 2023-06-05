@@ -3,7 +3,7 @@ const _ = require('lodash');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const router = express.Router();
-const {Otp,validatelogin,validateNumber,validateMessage} = require('../models/otp');
+const {Otp,validatelogin,validateNumber,validateMessage,validateRemindMessage} = require('../models/otp');
 const {User} = require('../models/user');
 
 const logger = require('../startup/logging');
@@ -162,7 +162,7 @@ router.post('/RemindSMS',async(req,res,next)=>{
 	
 	const message2 = "Your total balance with "+req.body.SenderPhoneNumber+" is "+req.body.TotalAmount;
 	const message3 ="link";
-	const tempmessage =req.body.SenderPhoneNumber+" gave "+req.body.ReceiverPhoneNumber+" Rs "+req.body.Amount+". \n Now Balance is Rs "+req.body.TotalAmount+". \n See all txns: "+"link1"+ "\n Settle App";
+	const tempmessage =req.body.SenderPhoneNumber+" gave "+req.body.ReceiverPhoneNumber+" Rs "+req.body.TotalAmount+". \n Now Balance is Rs "+req.body.TotalAmount+". \n See all txns: "+"link1"+ "\n Settle App";
 
 	const result1 = await sendmessage("91"+req.body.ReceiverPhoneNumber,tempmessage);
 	console.log(result1);

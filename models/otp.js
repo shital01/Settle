@@ -65,5 +65,6 @@ exports.validatelogin =validatelogin;
 exports.validateNumber =validateNumber;
 exports.validateNumbers =validateNumbers;
 exports.validateMessage =validateMessage;
+exports.validateRemindMessage =validateRemindMessage;
 
 module.exports.Otp =Otp;
