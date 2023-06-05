@@ -15,6 +15,8 @@ async function sendmessage(send_to, message) {
         auth_scheme: 'PLAIN',
         password: config.get('password'),
         format: 'TEXT',
+        principalEntityId:'1601568168456313537',
+        dltTemplateId:'1607100000000265753'
       },
     };
 
