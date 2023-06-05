@@ -9,7 +9,7 @@ const {User} = require('../models/user');
 const logger = require('../startup/logging');
 const dbDebugger = require('debug')('app:db');
 
-const sendMessage =require('../middleware/sendMessage');
+const sendmessage =require('../middleware/sendmessage');
 //just a test 
 /*helper function to generate OTP for generateOTP api
 Input->{}
