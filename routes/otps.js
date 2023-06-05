@@ -3,7 +3,7 @@ const _ = require('lodash');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const router = express.Router();
-const {Otp,validatelogin,validateNumber} = require('../models/otp');
+const {Otp,validatelogin,validateNumber,validateMessage} = require('../models/otp');
 const {User} = require('../models/user');
 
 const logger = require('../startup/logging');
@@ -114,4 +114,59 @@ router.post('/VerifyOTP',async(req,res)=>{
 	res.header('x-auth-token',token).send({error:null,response:user});
 });
 
+
+/*
+SendSMS
+Input->PhoneNumber(10 digit String)
+Output->true(boolean)
+Procedure->validateInput using Joi
+generate 4 digit random OTP
+save entry in Otp Table with Phone ,OTP as field with Otp as encrypted
+send SMS to user Phone Number
+Return boolean true,if number not 10 digit 400 request send ,if something else fail like database saving then 500 request
+*/
+router.post('/SendSMS',async(req,res,next)=>{
+	
+	const result = validateMessage(req.body);
+	if(result.error){
+		dbDebugger(result.error.details[0].message)
+		res.status(400).send({error:result.error.details[0],response:null});
+		//res.status(400).send(result.error.details[0].message);
+		return;
+	}
+	if(req.body.Isloan){
+		const message1 = req.body.SenderPhoneNumber+" gave you "+req.body.Amount
+	}
+	else{
+		const message1 = "You gave "+req.body.Amount+" to "+req.body.SenderPhoneNumber;
+	}
+	const message2 = "Your total balance with "+req.body.SenderPhoneNumber+" is "+req.body.TotalAmount;
+	const message3 ="link";
+
+
+	const result1 = await sendmessage("91"+req.body.ReceiverPhoneNumber,message1+message2+message3);
+	console.log(result1);
+	res.send({error:null,response:{OTP}})	
+	
+});
+
+router.post('/RemindSMS',async(req,res,next)=>{
+	
+	const result = validateRemindMessage(req.body);
+	if(result.error){
+		dbDebugger(result.error.details[0].message)
+		res.status(400).send({error:result.error.details[0],response:null});
+		//res.status(400).send(result.error.details[0].message);
+		return;
+	}
+	
+	const message2 = "Your total balance with "+req.body.SenderPhoneNumber+" is "+req.body.TotalAmount;
+	const message3 ="link";
+	const tempmessage =req.body.SenderPhoneNumber+" gave "+req.body.ReceiverPhoneNumber+" Rs "+req.body.Amount+". \n Now Balance is Rs "+req.body.TotalAmount+". \n See all txns: "+"link1"+ "\n Settle App";
+
+	const result1 = await sendmessage("91"+req.body.ReceiverPhoneNumber,tempmessage);
+	console.log(result1);
+	res.send({error:null,response:{OTP}})	
+	
+});
 module.exports =router;
