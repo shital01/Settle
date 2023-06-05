@@ -14,7 +14,7 @@ async function sendmessage(send_to, message) {
         userid: config.get('userid'),
         auth_scheme: 'PLAIN',
         password: config.get('password'),
-        format: 'JSON',
+        format: 'TEXT',
       },
     };
 
