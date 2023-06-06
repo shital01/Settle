@@ -1,7 +1,7 @@
 const axios = require("axios");
 const config = require('config');
 
-async function sendmessage(send_to, message,dltTemplateId) {
+async function sendmessage(send_to, message,TemplateId) {
     const urlencodedmessage = encodeURIComponent(message);
     const options = {
       method: 'POST',
@@ -17,7 +17,7 @@ async function sendmessage(send_to, message,dltTemplateId) {
         password: config.get('password'),
         format: 'TEXT',
         principalEntityId:'1601568168456313537',
-        dltTemplateId:dltTemplateId
+        dltTemplateId:TemplateId
       },
     };
 
