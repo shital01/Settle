@@ -16,10 +16,20 @@ async function sendmessage(send_to, message) {
         password: config.get('password'),
         format: 'TEXT',
         principalEntityId:'1601568168456313537',
-        dltTemplateId:'1607100000000265753'
+        dltTemplateId:'1607100000000265755'
       },
     };
 
+const requestURL = options.url + '?method=' + options.data.method +
+    '&send_to=' + options.data.send_to +
+    '&msg=' + options.data.msg +
+    '&msg_type=' + options.data.msg_type +
+    '&userid=' + options.data.userid +
+    '&auth_scheme=' + options.data.auth_scheme +
+    '&password=' + options.data.password +
+    '&format=' + options.data.format;
+
+  console.log('Final URL:', requestURL);
 
 
 const response = await axios(options);
