@@ -3,7 +3,7 @@ const _ = require('lodash');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const router = express.Router();
-const {Otp,validatelogin,validateNumber,validateMessage,validateRemindMessage} = require('../models/otp');
+const {Otp,validatelogin,validateNumber,validateMessage,validateRemindMessage,validateDeleteMessage} = require('../models/otp');
 const {User} = require('../models/user');
 
 const logger = require('../startup/logging');
@@ -125,7 +125,7 @@ save entry in Otp Table with Phone ,OTP as field with Otp as encrypted
 send SMS to user Phone Number
 Return boolean true,if number not 10 digit 400 request send ,if something else fail like database saving then 500 request
 */
-router.post('/SendSMS',async(req,res,next)=>{
+router.post('/SendTransactionalSMS',async(req,res,next)=>{
 	
 	const result = validateMessage(req.body);
 	if(result.error){
@@ -134,22 +134,39 @@ router.post('/SendSMS',async(req,res,next)=>{
 		//res.status(400).send(result.error.details[0].message);
 		return;
 	}
+	var link ="link";
+	var message="";
 	if(req.body.Isloan){
-		const message1 = req.body.SenderPhoneNumber+" gave you "+req.body.Amount
+		 message = req.body.SenderPhoneNumber+" gave "req.body.ReceiverPhoneNumber+" Rs "+req.body.Amount+". \n Now Balance is Rs "req.body.TotalAmount+". \n See all txns: "+link+" \n Settle App";
 	}
 	else{
-		const message1 = "You gave "+req.body.Amount+" to "+req.body.SenderPhoneNumber;
+		 message = req.body.ReceiverPhoneNumber+" gave "req.body.SenderPhoneNumber+" Rs "+req.body.Amount+". \n Now Balance is Rs "req.body.TotalAmount+". \n See all txns: "+link+" \n Settle App";
 	}
-	const message2 = "Your total balance with "+req.body.SenderPhoneNumber+" is "+req.body.TotalAmount;
-	const message3 ="link";
-
-
-	const result1 = await sendmessage("91"+req.body.ReceiverPhoneNumber,message1+message2+message3);
+	const result1 = await sendmessage("91"+req.body.ReceiverPhoneNumber,message);
 	console.log(result1);
-	res.send({error:null,response:{OTP}})	
+	res.send({error:null,response:{result1}})	
 	
 });
+//Delete SMS
 
+//Delete SMS
+router.post('/DeleteSMS',async(req,res,next)=>{
+	
+	const result = validateDeleteMessage(req.body);
+	if(result.error){
+		dbDebugger(result.error.details[0].message)
+		res.status(400).send({error:result.error.details[0],response:null});
+		//res.status(400).send(result.error.details[0].message);
+		return;
+	}
+	var link ="link";
+	var finalmessage = "Deleted: \n "+req.body.SenderPhoneNumber+" gave "+req.body.ReceiverPhoneNumber+" Rs "+req.body.Amount+". "+req.body.TransactionDate+". \n Bal: Rs "+req.body.TotalAmount+". \n Download: "+link+" Settle App";
+	const result1 = await sendmessage("91"+req.body.ReceiverPhoneNumber,finalmessage);
+	console.log(result1);
+	res.send({error:null,response:{result1}})	
+	
+});
+//Engagement SMS
 router.post('/RemindSMS',async(req,res,next)=>{
 	
 	const result = validateRemindMessage(req.body);
@@ -160,12 +177,8 @@ router.post('/RemindSMS',async(req,res,next)=>{
 		return;
 	}
 	
-	const message2 = "Your total balance with "+req.body.SenderPhoneNumber+" is "+req.body.TotalAmount;
-	const message3 ="link";
-	const tempmessage =req.body.SenderPhoneNumber+" gave "+req.body.ReceiverPhoneNumber+" Rs "+req.body.TotalAmount+". \n Now Balance is Rs "+req.body.TotalAmount+". \n See all txns: "+"link1"+ "\n Settle App";
 	var link ="link";
 	var finalmessage = "Your balance with "+req.body.SenderPhoneNumber+" is Rs "+req.body.TotalAmount+". \n See all txns: "+link+" \n Settle App";
-
 	const result1 = await sendmessage("91"+req.body.ReceiverPhoneNumber,finalmessage);
 	console.log(result1);
 	res.send({error:null,response:{result1}})	
