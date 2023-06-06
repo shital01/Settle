@@ -137,10 +137,10 @@ router.post('/SendTransactionalSMS',async(req,res,next)=>{
 	var link ="link";
 	var message="";
 	if(req.body.Isloan){
-		 message = req.body.SenderPhoneNumber+" gave "req.body.ReceiverPhoneNumber+" Rs "+req.body.Amount+". \n Now Balance is Rs "req.body.TotalAmount+". \n See all txns: "+link+" \n Settle App";
+		 message = req.body.SenderPhoneNumber+" gave "+req.body.ReceiverPhoneNumber+" Rs "+req.body.Amount+". \n Now Balance is Rs "+req.body.TotalAmount+". \n See all txns: "+link+" \n Settle App";
 	}
 	else{
-		 message = req.body.ReceiverPhoneNumber+" gave "req.body.SenderPhoneNumber+" Rs "+req.body.Amount+". \n Now Balance is Rs "req.body.TotalAmount+". \n See all txns: "+link+" \n Settle App";
+		 message = req.body.ReceiverPhoneNumber+" gave "+req.body.SenderPhoneNumber+" Rs "+req.body.Amount+". \n Now Balance is Rs "+req.body.TotalAmount+". \n See all txns: "+link+" \n Settle App";
 	}
 	const result1 = await sendmessage("91"+req.body.ReceiverPhoneNumber,message);
 	console.log(result1);
