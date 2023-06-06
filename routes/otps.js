@@ -168,7 +168,7 @@ router.post('/RemindSMS',async(req,res,next)=>{
 
 	const result1 = await sendmessage("91"+req.body.ReceiverPhoneNumber,finalmessage);
 	console.log(result1);
-	res.send({error:null,response:{result1})	
+	res.send({error:null,response:{result1}})	
 	
 });
 module.exports =router;
