@@ -142,7 +142,7 @@ router.post('/SendTransactionalSMS',async(req,res,next)=>{
 	else{
 		 message = req.body.ReceiverPhoneNumber+" gave "+req.body.SenderPhoneNumber+" Rs "+req.body.Amount+". \n Now Balance is Rs "+req.body.TotalAmount+". \n See all txns: "+link+" \n Settle App";
 	}
-	const result1 = await sendmessage("91"+req.body.ReceiverPhoneNumber,message);
+	const result1 = await sendmessage("91"+req.body.ReceiverPhoneNumber,message,'1607100000000265753');
 	console.log(result1);
 	res.send({error:null,response:{result1}})	
 	
@@ -150,6 +150,7 @@ router.post('/SendTransactionalSMS',async(req,res,next)=>{
 //Delete SMS
 
 //Delete SMS
+//hide ids later along wiht priniciple
 router.post('/DeleteSMS',async(req,res,next)=>{
 	
 	const result = validateDeleteMessage(req.body);
@@ -161,7 +162,7 @@ router.post('/DeleteSMS',async(req,res,next)=>{
 	}
 	var link ="link";
 	var finalmessage = "Deleted: \n "+req.body.SenderPhoneNumber+" gave "+req.body.ReceiverPhoneNumber+" Rs "+req.body.Amount+". "+req.body.TransactionDate+". \n Bal: Rs "+req.body.TotalAmount+". \n Download: "+link+" Settle App";
-	const result1 = await sendmessage("91"+req.body.ReceiverPhoneNumber,finalmessage);
+	const result1 = await sendmessage("91"+req.body.ReceiverPhoneNumber,finalmessage,'1607100000000265754');
 	console.log(result1);
 	res.send({error:null,response:{result1}})	
 	
@@ -179,7 +180,7 @@ router.post('/RemindSMS',async(req,res,next)=>{
 	
 	var link ="link";
 	var finalmessage = "Your balance with "+req.body.SenderPhoneNumber+" is Rs "+req.body.TotalAmount+". \n See all txns: "+link+" \n Settle App";
-	const result1 = await sendmessage("91"+req.body.ReceiverPhoneNumber,finalmessage);
+	const result1 = await sendmessage("91"+req.body.ReceiverPhoneNumber,finalmessage,'1607100000000265755');
 	console.log(result1);
 	res.send({error:null,response:{result1}})	
 	

@@ -1,7 +1,7 @@
 const axios = require("axios");
 const config = require('config');
 
-async function sendmessage(send_to, message) {
+async function sendmessage(send_to, message,dltTemplateId) {
     const urlencodedmessage = encodeURIComponent(message);
     const options = {
       method: 'POST',
@@ -17,7 +17,7 @@ async function sendmessage(send_to, message) {
         password: config.get('password'),
         format: 'TEXT',
         principalEntityId:'1601568168456313537',
-        dltTemplateId:'1607100000000265755'
+        dltTemplateId:dltTemplateId
       },
     };
 
@@ -35,7 +35,7 @@ const requestURL = options.url + '?method=' + options.data.method +
 
 const response = await axios(options);
     if (response.status === 200) {
-    	console.log(response);
+    	//console.log(response);
       console.log('Message sent successfully');
       return true;
     } 
