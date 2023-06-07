@@ -22,15 +22,20 @@ router.put('/ViralFactor',async(req,res)=>{
           as: 'receivedMessages'
         }
       },
-      {
-    $project: {
-      PhoneNumber: 1,
-      receivedMessages: {
-        SenderPhoneNumber: 1,
-        ReceiverPhoneNumber: 1,
-        UpdatedDate: 1
+        {
+      $project: {
+        PhoneNumber: 1,
+        receivedMessages: {
+          SenderPhoneNumber: 1,
+          ReceiverPhoneNumber: 1,
+          UpdatedDate: 1
+        }
       }
-    }
+    },
+    {
+      $match: {
+        receivedMessages: { $ne: [] } // Filter out documents where receivedMessages is an empty array
+      }
   },
   {
     $addFields: {
@@ -42,6 +47,7 @@ router.put('/ViralFactor',async(req,res)=>{
       }
     }
   },
+  /*
    {
     $addFields: {
       Time1: {
@@ -51,26 +57,24 @@ router.put('/ViralFactor',async(req,res)=>{
         $toDate:'$accountCreationTimestamp'
       }
     }
+
   },
-  {
-      $match: {
-        receivedMessages: { $ne: [] } // Filter out documents where receivedMessages is an empty array
-      }
-  },
+  */
   {
       $match: {
         $expr: {
-          $lt: ['$Time1', '$Time2']
+          $lt: ['$earliestUpdateTime', '$accountCreationTimestamp']
         }
       }
     }
     ,{
     $count: 'viralUsersCount'
   } 
-    ])
-    res.send(cursor/totalUsers)
-    
-
+    ]);
+ const result = cursor[0]?.viralUsersCount || 0;
+  const viralFactor = result / totalUsers;
+  res.send(viralFactor.toString());
+  
 })
 
 //time till first message
