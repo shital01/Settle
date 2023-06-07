@@ -54,6 +54,11 @@ router.put('/ViralFactor',async(req,res)=>{
   },
   {
       $match: {
+        receivedMessages: { $ne: [] } // Filter out documents where receivedMessages is an empty array
+      }
+  },
+  {
+      $match: {
         $expr: {
           $lt: ['$Time1', '$Time2']
         }
