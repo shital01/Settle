@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const {validateMessage,validateRemindMessage,validateDeleteMessage} = require('../models/otp');
+const {validateMessage,validateRemindMessage,validateDeleteMessage} = require('../models/sms');
 
 const logger = require('../startup/logging');
 const dbDebugger = require('debug')('app:db');

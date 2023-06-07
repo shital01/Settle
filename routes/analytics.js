@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 const {Transaction} = require('../models/transaction');
-const {Step01} = require('../models/step01');
 var _ = require('lodash');
 const {User} = require('../models/user');
 const auth =require('../middleware/auth');
@@ -13,43 +12,59 @@ const ObjectId = require('mongodb').ObjectId;
 router.put('/ViralFactor',async(req,res)=>{
     // Count the total number of users
     const totalUsers = await User.count();
-console.log(totalUsers)
-    const totalmessages = await Transaction.count();
-console.log(totalmessages)
     // Find the viral users
     const cursor = await User.aggregate([
       {
         $lookup: {
-          from: 'Transaction',
+          from: 'transactions',
           localField: 'PhoneNumber',
           foreignField: 'ReceiverPhoneNumber',
           as: 'receivedMessages'
         }
       },
-      /*{
-        $match: {
-          _id: { $gt: ObjectId(Math.floor(Date.now() / 1000).toString(16) + '0000000000000000') }, // Extract time of account creation from _id field
-          'receivedMessages.0': { $exists: true }, // Check if user received at least one message
-          _id: { $gt: { $toDate: { $arrayElemAt: ['$receivedMessages.UpdatedDate', 0] } } } // Check if account creation is after the update time of the first message
-        }
-      },
       {
-        $count: 'viralUsersCount'
-      }*/
+    $project: {
+      PhoneNumber: 1,
+      receivedMessages: {
+        SenderPhoneNumber: 1,
+        ReceiverPhoneNumber: 1,
+        UpdatedDate: 1
+      }
+    }
+  },
+  {
+    $addFields: {
+      earliestUpdateTime: {
+        $min: '$receivedMessages.UpdatedDate'
+      },
+      accountCreationTimestamp: {
+        $toDate: '$_id'
+      }
+    }
+  },
+   {
+    $addFields: {
+      Time1: {
+        $toDate: '$earliestUpdateTime'
+      },
+      Time2:{
+        $toDate:'$accountCreationTimestamp'
+      }
+    }
+  },
+  {
+      $match: {
+        $expr: {
+          $lt: ['$Time1', '$Time2']
+        }
+      }
+    }
+    ,{
+    $count: 'viralUsersCount'
+  } 
     ])
-    console.log(cursor)
-    res.send(cursor)
-    //const viralUsers = await cursor.toArray();
-
-    //const viralUsersCount = viralUsers.length > 0 ? viralUsers[0].viralUsersCount : 0;
-    //const viralFactor = viralUsersCount / totalUsers;
-
-    //console.log('Viral Factor:', viralFactor);
-    //res.send(viralFactor);
-   // client.close();
-  
-
-//calculateViralFactor();
+    res.send(cursor/totalUsers)
+    
 
 })
 

@@ -110,10 +110,8 @@ router.put('/',auth,async(req,res)=>{
 	if(!transaction) return res.status(400).send({error:{message:'Transaction doesnot exits with given Id'},response:null});
 	if(!transaction.SenderID.equals(req.user._id)) return res.status(403).send({error:{message:'Not Access for updating'},response:null});
 	req.body.UpdatedDate=new Date(new Date().getTime()+330*60*1000);
-	if('Isloan' in req.body){
-		if(!req.body.Isloan){req.body.Amount=-transaction.Amount;}
-		else{req.body.Amount=transaction.Amount;}
-	}
+	
+	if(!req.body.Isloan){req.body.Amount=-req.body.Amount}
 	//findbyid and update return new or old nto normal update
 
 	transaction.set(req.body)

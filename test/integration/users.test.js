@@ -50,26 +50,43 @@ describe('/api/users',()=>{
 
 		})
 		//Path-3
-		/*
-		it('should return 400 if validation fail due to name ',async()=>{
-			Name = '';
+		
+		it('should return 400 if validation fail due to name validation',async()=>{
+			Name = 3;
 			payload={Name};
 			const res = await exec();
 			expect(res.status).toBe(400);	
 			expect(res.body.response).toBe(null);
 
 		})
-
 		//Path-4
-		it('should return 400 if validation fail due to profile ',async()=>{
-			Profile = 1;
-			payload = {Profile};
+		it('should return 200 but else path take for profile',async()=>{
+			Name = "1";
+			payload = {Name};
 			const res = await exec();
-			expect(res.status).toBe(400);
-			expect(res.body.response).toBe(null);
+			expect(res.status).toBe(200);
+			expect(res.body.error).toBe(null);
 
 		})
-		*/
+		//Path-4//notworking
+		it('should return 200 but else path take for name',async()=>{
+			Profile = "1";
+			payload = {Profile};
+			const res = await exec();
+			expect(res.status).toBe(200);
+			expect(res.body.error).toBe(null);
+
+		})
+		//Path-4//notworking
+		it('should return 200 but else path take for name',async()=>{
+			//Profile = "1";
+			payload = {};
+			const res = await exec();
+			expect(res.status).toBe(200);
+			expect(res.body.error).toBe(null);
+
+		})
+		
 		//Path-05 check what code
 		it('should return 400  if user is not exits  ',async()=>{
 			token=token2

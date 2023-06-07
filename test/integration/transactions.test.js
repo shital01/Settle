@@ -280,6 +280,18 @@ expect(Object.keys(res.body)).toEqual(
 			expect(Object.keys(res.body.response)).toEqual(
 				expect.arrayContaining(['SenderName','SenderPhoneNumber','ReceiverName','ReceiverPhoneNumber','Isloan','Amount']))
 		})
+		//Path-09
+		it('should save and return transaction if valid transaction isloan else path ',async()=>{
+			Notes="just a note";
+			Isloan=false
+			const res = await exec();
+			expect(res.status).toBe(200);
+			expect(res.body.error).toBe(null);
+			//check the save part also 
+			//const transaction = await Transaction.find({SenderName:"name1"});
+			expect(Object.keys(res.body.response)).toEqual(
+				expect.arrayContaining(['SenderName','SenderPhoneNumber','ReceiverName','ReceiverPhoneNumber','Isloan','Amount']))
+		})
 	})
 	describe('PUT/',()=>{
 		let token,token2,userid,TransactionId,userid2;
@@ -397,13 +409,34 @@ expect(Object.keys(res.body)).toEqual(
 			expect(res.body.response).toBe(null);
 		})
 		//Path-11
+		//confirm amount?
 		it('should update the transaction and return valid response if valid transaction ',async()=>{
 			payload={Amount,TransactionId}
 			const res = await exec();
 			expect(res.status).toBe(200);
 			expect(res.body.error).toBe(null);
 			const transactions = await Transaction.find()
+			expect(transactions[0].Amount).toBe(-2);
+		})
+		//Path-12
+		it('should update the transaction and return valid response if valid transaction -path for isloan',async()=>{
+			var Isloan=true
+			payload={Amount,TransactionId,Isloan}
+			const res = await exec();
+			expect(res.status).toBe(200);
+			expect(res.body.error).toBe(null);
+			const transactions = await Transaction.find()
 			expect(transactions[0].Amount).toBe(2);
+		})
+		//Path-13
+		it('should update the transaction and return valid response if valid transaction -path for isloan false',async()=>{
+			var Isloan=false
+			payload={Amount,TransactionId,Isloan}
+			const res = await exec();
+			expect(res.status).toBe(200);
+			expect(res.body.error).toBe(null);
+			const transactions = await Transaction.find()
+			expect(transactions[0].Amount).toBe(-2);
 		})
 	})
 	//Delete testing
