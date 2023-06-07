@@ -33,42 +33,38 @@ router.put('/ViralFactor',async(req,res)=>{
     }
   },
   {
-    $addFields: {
-      earliestUpdateTime: {
-        $min: '$receivedMessages.UpdatedDate'
-      },
-      accountCreationTimestamp: {
-        $toDate: '$_id'
-      }
-    }
-  },
-   {
-    $addFields: {
-      Time1: {
-        $toDate: '$earliestUpdateTime'
-      },
-      Time2:{
-        $toDate:'$accountCreationTimestamp'
-      }
-    }
-  },
-  {
       $match: {
         receivedMessages: { $ne: [] } // Filter out documents where receivedMessages is an empty array
       }
-  },
-  {
-      $match: {
-        $expr: {
-          $lt: ['$Time1', '$Time2']
+    },
+    {
+      $addFields: {
+        earliestUpdateTime: {
+          $min: '$receivedMessages.UpdatedDate'
+        },
+        accountCreationTimestamp: {
+          $toDate: '$_id'
         }
       }
+    },
+    {
+      $match: {
+        $expr: {
+          $lt: [
+            { $toDate: '$earliestUpdateTime' },
+            { $toDate: '$accountCreationTimestamp' }
+          ]
+        }
+      }
+    },
+    {
+      $count: 'viralUsersCount'
     }
-    ,{
-    $count: 'viralUsersCount'
-  } 
-    ])
-    res.send(cursor/totalUsers)
+  ]);
+
+  const result = cursor[0]?.viralUsersCount || 0;
+  const viralFactor = result / totalUsers;
+  res.send(viralFactor.toString());
     
 
 })
