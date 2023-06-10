@@ -54,7 +54,7 @@ router.post('/DeleteSMS',async(req,res,next)=>{
 	var link ="https://play.google.com/store/apps";
 	var message="";
 	if(req.body.Isloan){
-		 message = req.body.SenderName+"("+req.body.SenderPhoneNumber+") gave you Rs "+req.body.Amount+". "+req.body.TransactionDate+". \nBal Rs "+req.body.TotalAmount+". \nDownload: "+link+" Settle App";
+		 message = req.body.SenderName+"("+req.body.SenderPhoneNumber+") gave you Rs "+req.body.Amount+". "+req.body.TransactionDate.substring(0,10)+". \nBal Rs "+req.body.TotalAmount+". \nDownload: "+link+" Settle App";
 	}
 	else{
 		 message = "You gave "+req.body.SenderName+"("+req.body.SenderPhoneNumber+") Rs "+(-req.body.Amount)+". "+req.body.TransactionDate.substring(0,10)+". \nBal Rs "+req.body.TotalAmount+". \nDownload: "+link+" Settle App";
