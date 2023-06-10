@@ -74,7 +74,7 @@ router.put('/ViralFactor',async(req,res)=>{
     $count: 'viralUsersCount'
   } 
     ]);
- const result = cursor[0]?.viralUsersCount || 0;
+ const result = cursor[0].viralUsersCount || 0;//? removed for ec2 error
   const viralFactor = result / totalUsers;
   res.send(viralFactor.toString());
 

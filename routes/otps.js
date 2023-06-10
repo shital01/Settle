@@ -59,7 +59,7 @@ router.post('/GenerateOTP',async(req,res,next)=>{
 	await otp.save();
 	//sendSMS
 	var finalmessage ="OTP for login is: "+OTP+" Settle App"
-	const SendSMS = await sendmessage("91"+req.body.PhoneNumber,finalmessage,'607100000000267487');
+	const SendSMS = await sendmessage("91"+req.body.PhoneNumber,finalmessage,'1607100000000267487');
 	//console.log(result1);
 	res.send({error:null,response:{SendSMS}})	
 	//res.send(true)
