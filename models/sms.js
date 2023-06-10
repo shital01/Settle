@@ -3,6 +3,7 @@ const Joi = require('joi');
 //helper function used to validate input for generateOTP
 function validateMessage(req){
 	const schema=Joi.object({
+			SenderName:Joi.string(),
 	SenderPhoneNumber:Joi.string().regex(/^[0-9]{10}$/).messages({'string.pattern.base': `Phone number must have 10 digits.`}).required(),
 	ReceiverPhoneNumber:Joi.string().regex(/^[0-9]{10}$/).messages({'string.pattern.base': `Phone number must have 10 digits.`}).required(),
 	Isloan:Joi.boolean().required(),
@@ -14,7 +15,9 @@ function validateMessage(req){
 
 //helper function used to validate input for generateOTP
 function validateDeleteMessage(req){
+
 	const schema=Joi.object({
+			SenderName:Joi.string(),
 	SenderPhoneNumber:Joi.string().regex(/^[0-9]{10}$/).messages({'string.pattern.base': `Phone number must have 10 digits.`}).required(),
 	ReceiverPhoneNumber:Joi.string().regex(/^[0-9]{10}$/).messages({'string.pattern.base': `Phone number must have 10 digits.`}).required(),
 	Isloan:Joi.boolean().required(),
@@ -28,6 +31,7 @@ function validateDeleteMessage(req){
 //helper function used to validate input for generateOTP
 function validateRemindMessage(req){
 	const schema=Joi.object({
+			SenderName:Joi.string(),
 	SenderPhoneNumber:Joi.string().regex(/^[0-9]{10}$/).messages({'string.pattern.base': `Phone number must have 10 digits.`}).required(),
 	ReceiverPhoneNumber:Joi.string().regex(/^[0-9]{10}$/).messages({'string.pattern.base': `Phone number must have 10 digits.`}).required(),
 	TotalAmount:Joi.number().integer().required()

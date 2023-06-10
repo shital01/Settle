@@ -57,7 +57,7 @@ router.post('/DeleteSMS',async(req,res,next)=>{
 		 message = req.body.SenderName+"("+req.body.SenderPhoneNumber+") gave you Rs "+req.body.Amount+". "+req.body.TransactionDate+". \nBal Rs "+req.body.TotalAmount+". \nDownload: "+link+" Settle App";
 	}
 	else{
-		 message = "You gave "+req.body.SenderName+"("+req.body.SenderPhoneNumber+") Rs "+(-req.body.Amount)+". "+req.body.TransactionDate+". \nBal Rs "+req.body.TotalAmount+". \nDownload: "+link+" Settle App";
+		 message = "You gave "+req.body.SenderName+"("+req.body.SenderPhoneNumber+") Rs "+(-req.body.Amount)+". "+req.body.TransactionDate.substring(0,10)+". \nBal Rs "+req.body.TotalAmount+". \nDownload: "+link+" Settle App";
 	}
 	var finalmessage = "Deleted: \n"+message;
 	const SendSMS = await sendmessage("91"+req.body.ReceiverPhoneNumber,finalmessage,'1607100000000265754');
