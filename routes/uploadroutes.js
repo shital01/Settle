@@ -6,8 +6,8 @@ const auth =require('../middleware/auth');
 const config = require('config');
 
 const s3 = new AWS.S3({
-	accessKeyId:config.get('AWSAccessKey'),
-	secretAccessKey:config.get('AWSSecretKey'),
+	//accessKeyId:config.get('AWSAccessKey'),
+	//secretAccessKey:config.get('AWSSecretKey'),
 	signatureVersion:'v4',
 	region: 'ap-south-1'
 });
