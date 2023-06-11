@@ -1,5 +1,10 @@
 const config = require('config');
 const winston = require('winston');
+const morgan = require('morgan');
+const express = require('express');
+
+const app = express();
+
 require	('express-async-errors');
 require('winston-mongodb');
 const { combine, timestamp, json, errors } = winston.format;
@@ -30,6 +35,14 @@ if (process.env.NODE_ENV !== 'production') {
   }));
 }
 //logger.error(new Error("an error"));
-logger.info("hey");
+app.use((req, res, next) => {
+  const start = Date.now();
+  res.on('finish', () => {
+    const responseTime = Date.now() - start;
+    logger.info(`${req.ip} - ${req.method} ${req.originalUrl} - ${res.statusCode} - ${responseTime}ms`);
+  });
+  next();
+});
 
+app.use(morgan('dev'));
 module.exports = logger;

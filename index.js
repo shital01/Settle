@@ -28,8 +28,6 @@ require('./startup/prod')(app);
 
 }
 
-
-
 //not work as already return otherwise move this code it will show authentication
 /*
 app.use(function(req,res,next){
