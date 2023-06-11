@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const AWS = require('aws-sdk');
+require('aws-sdk/lib/maintenance_mode_message').suppress = true;
+
 const uuid = require('uuid');
 const auth =require('../middleware/auth');
 const config = require('config');

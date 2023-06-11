@@ -1,5 +1,7 @@
 const axios = require("axios");
 const config = require('config');
+const logger = require('../startup/logging');
+
 
 async function sendmessage(send_to, message,TemplateId) {
     const urlencodedmessage = encodeURIComponent(message);
@@ -30,13 +32,13 @@ const requestURL = options.url + '?method=' + options.data.method +
     '&password=' + options.data.password +
     '&format=' + options.data.format;
 
-  console.log('Final URL:', requestURL);
+  logger.info('Final URL:', requestURL);
 
 
 const response = await axios(options);
     if (response.status === 200) {
     	//console.log(response);
-      console.log('Message sent successfully');
+      //console.log('Message sent successfully');
       return true;
     } 
 }

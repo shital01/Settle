@@ -4,11 +4,24 @@ const express = require('express');
 const app = express();
 const winston = require('winston');
 
-const logger = require('./startup/logging');
 require('./startup/config')();
+const logger = require('./startup/logging');
+
+if(app.get('env')=== 'production'){
+require('./startup/prod')(app);
+app.use((req, res, next) => {
+  const start = Date.now();
+  res.on('finish', () => {
+    const responseTime = Date.now() - start;
+    logger.info(`${req.ip} - ${req.method} ${req.originalUrl} - ${res.statusCode} - ${responseTime}ms`);
+  });
+  next();
+});
+}
+
 
 process.on('unhandledRejections',(ex) =>{
-	console.log(ex)
+	//console.log(ex)
 	throw ex;//convert unhandled to uncaught for winston
 });
 
@@ -16,6 +29,8 @@ process.on('unhandledRejections',(ex) =>{
 if((app.get('env')=== 'development')||(app.get('env')=== 'test') ){
 	const morgan = require('morgan');
 	app.use(morgan('tiny'));
+	//app.use(morgan('dev'));
+
 	startupDebugger('Morgan enabled...')
 }
 
@@ -23,10 +38,7 @@ require('./startup/routes')(app);
 require('./startup/db')();
 require('./startup/validate')();
 
-if(app.get('env')=== 'production'){
-require('./startup/prod')(app);
 
-}
 
 //not work as already return otherwise move this code it will show authentication
 /*

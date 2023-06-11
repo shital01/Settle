@@ -68,7 +68,7 @@ router.post('/',auth,async(req,res)=>{
 		return;
 	}
 		req.body.UpdatedDate=new Date(new Date().getTime()+330*60*1000);
-	console.log(req.body.Isloan)
+	//console.log(req.body.Isloan)
 	if(!req.body.Isloan){req.body.Amount=-req.body.Amount}
 	const transaction = new Transaction(req.body);
 	const output = await transaction.save();
