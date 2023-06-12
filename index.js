@@ -13,6 +13,9 @@ app.use((req, res, next) => {
   const start = Date.now();
   res.on('finish', () => {
     const responseTime = Date.now() - start;
+    const userAgent = req.headers['user-agent'] || 'Unknown';
+    const authToken = req.headers['x-auth-token'] || 'N/A';
+    logger.info(`${req.ip} - ${userAgent} - Auth Token: ${authToken} - ${req.method} ${req.originalUrl} - ${res.statusCode} - ${responseTime}ms`);
     logger.info(`${req.ip} - ${req.method} ${req.originalUrl} - ${res.statusCode} - ${responseTime}ms`);
   });
   next();
