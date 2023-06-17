@@ -6,6 +6,9 @@ const logger = require('../startup/logging');
 const dbDebugger = require('debug')('app:db');
 
 const sendmessage =require('../middleware/sendmessage');
+
+const auth =require('../middleware/auth');
+
 /*
 SendSMS
 Input->PhoneNumber(10 digit String)
@@ -16,9 +19,11 @@ save entry in Otp Table with Phone ,OTP as field with Otp as encrypted
 send SMS to user Phone Number
 Return boolean true,if number not 10 digit 400 request send ,if something else fail like database saving then 500 request
 */
-router.post('/TransactionalSMS',async(req,res,next)=>{
-	
+router.post('/TransactionalSMS',auth,async(req,res,next)=>{
+	req.body.SenderName = req.user.Name;
+	req.body.SenderPhoneNumber = req.user.PhoneNumber;
 	const result = validateMessage(req.body);
+
 	if(result.error){
 		dbDebugger(result.error.details[0].message)
 		res.status(400).send({error:result.error.details[0],response:null});
@@ -42,8 +47,9 @@ router.post('/TransactionalSMS',async(req,res,next)=>{
 
 //Delete SMS
 //hide ids later along wiht priniciple
-router.post('/DeleteSMS',async(req,res,next)=>{
-	
+router.post('/DeleteSMS',auth,async(req,res,next)=>{
+	req.body.SenderName = req.user.Name;
+	req.body.SenderPhoneNumber = req.user.PhoneNumber;
 	const result = validateDeleteMessage(req.body);
 	if(result.error){
 		dbDebugger(result.error.details[0].message)
@@ -66,8 +72,9 @@ router.post('/DeleteSMS',async(req,res,next)=>{
 	
 });
 //Engagement SMS
-router.post('/RemindSMS',async(req,res,next)=>{
-	
+router.post('/RemindSMS',auth,async(req,res,next)=>{
+	req.body.SenderName = req.user.Name;
+	req.body.SenderPhoneNumber = req.user.PhoneNumber;
 	const result = validateRemindMessage(req.body);
 	if(result.error){
 		dbDebugger(result.error.details[0].message)
