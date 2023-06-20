@@ -5,6 +5,7 @@ const transactions = require('../routes/transactions');
 const otps = require('../routes/otps');
 const uploadroutes = require('../routes/uploadroutes');
 const sendsms = require('../routes/sendsms');
+const contacts = require('../routes/contact');
 
 const helmet = require('helmet');
 const error = require('../middleware/error')
@@ -17,6 +18,8 @@ module.exports = function(app){
 
 	app.use('/api/sms',sendsms);
 	app.use('/api/users',users);
+	app.use('/api/contact',contacts);
+
 	app.use('/api/transactions',transactions);
 	app.use('/api/otps',otps);
 	app.use('/api/UploadURLRequest',uploadroutes);
