@@ -30,7 +30,7 @@ router.post('/TransactionalSMS',auth,async(req,res,next)=>{
 		//res.status(400).send(result.error.details[0].message);
 		return;
 	}
-	var link ="https://play.google.com/store/apps";
+	var link ="https://bit.ly/settleapp1";
 	var message="";
 	if(req.body.Isloan){
 		 message = req.body.SenderName+"("+req.body.SenderPhoneNumber+") gave you Rs "+req.body.Amount+". \nNow Balance is Rs "+req.body.TotalAmount+". \nSee all txns: "+link+" \nSettle App";
@@ -57,7 +57,7 @@ router.post('/DeleteSMS',auth,async(req,res,next)=>{
 		//res.status(400).send(result.error.details[0].message);
 		return;
 	}
-	var link ="https://play.google.com/store/apps";
+	var link ="https://bit.ly/settleapp1";
 	var message="";
 	if(req.body.Isloan){
 		 message = req.body.SenderName+"("+req.body.SenderPhoneNumber+") gave you Rs "+req.body.Amount+". "+req.body.TransactionDate.substring(0,10)+". \nBal Rs "+req.body.TotalAmount+". \nDownload: "+link+" Settle App";
@@ -83,7 +83,7 @@ router.post('/RemindSMS',auth,async(req,res,next)=>{
 		return;
 	}
 	
-	var link ="https://play.google.com/store/apps";
+	var link ="https://bit.ly/settleapp1";
 	var finalmessage = "Your balance with "+req.body.SenderName+"("+req.body.SenderPhoneNumber+") is Rs "+req.body.TotalAmount+". \nSee all txns: "+link+" \nSettle App";
 	const SendSMS = await sendmessage("91"+req.body.ReceiverPhoneNumber,finalmessage,'1607100000000265755');
 	//console.log(result1);
