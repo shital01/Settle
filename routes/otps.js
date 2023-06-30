@@ -132,4 +132,15 @@ router.post('/VerifyOTP',async(req,res)=>{
 }
 });
 
+//Fake login functions
+router.post('/FakeNewSignUp',async(req,res)=>{
+	//req.body.Name="";
+	req.body.Profile="";
+	user = new User(req.body);
+	const newuser = await user.save();
+	const token = newuser.generateAuthToken()
+	res.header('x-auth-token',token).send({error:null,response:user});
+
+});
+
 module.exports =router;
