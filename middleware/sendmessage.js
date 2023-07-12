@@ -21,7 +21,7 @@ async function sendmessage(send_to, message,TemplateId) {
         format: 'TEXT',
         principalEntityId:'1601568168456313537',
         dltTemplateId:TemplateId
-      },,
+      },
     httpsAgent: new https.Agent({
       rejectUnauthorized: true,
       secureProtocol: 'TLSv1_2_method'
