@@ -36,7 +36,7 @@ router.post('/TransactionalSMS',auth,async(req,res,next)=>{
 		 message = req.body.SenderName+"("+req.body.SenderPhoneNumber+") gave you Rs "+req.body.Amount+". \nNow Balance is Rs "+req.body.TotalAmount+". \nSee all txns: "+link+" \nSettle App";
 	}
 	else{
-		 message = "You gave "+req.body.SenderName+"("+req.body.SenderPhoneNumber+") Rs "+(-req.body.Amount)+". \nNow Balance is Rs "+req.body.TotalAmount+". \nSee all txns: "+link+" \nSettle App";
+		 message = "You gave "+req.body.SenderName+"("+req.body.SenderPhoneNumber+") Rs "+req.body.Amount+". \nNow Balance is Rs "+req.body.TotalAmount+". \nSee all txns: "+link+" \nSettle App";
 	}
 	const SendSMS = await sendmessage("91"+req.body.ReceiverPhoneNumber,message,'1607100000000265753');
 	//console.log(result1);
