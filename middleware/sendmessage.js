@@ -1,14 +1,13 @@
 const axios = require("axios");
 const config = require('config');
 const logger = require('../startup/logging');
-const https = require('https');
 
 
 async function sendmessage(send_to, message,TemplateId) {
     const urlencodedmessage = encodeURIComponent(message);
     const options = {
       method: 'POST',
-      url: 'https://enterprise.smsgupshup.com/GatewayAPI/rest',
+      url: 'https://enterpriseapi.smsgupshup.com/GatewayAPI/rest',
       data: {
         method: 'sendMessage',
         send_to: send_to,
@@ -21,11 +20,7 @@ async function sendmessage(send_to, message,TemplateId) {
         format: 'TEXT',
         principalEntityId:'1601568168456313537',
         dltTemplateId:TemplateId
-      },
-    httpsAgent: new https.Agent({
-      rejectUnauthorized: true,
-      secureProtocol: 'TLSv1_2_method'
-    })
+      }
     };
 
 const requestURL = options.url + '?method=' + options.data.method +
