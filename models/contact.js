@@ -21,6 +21,7 @@ const ContactSchema = new mongoose.Schema({
 });
 const Contact = mongoose.model('Contact',ContactSchema);
 
+
 //helper for verify Contact list-10 digit is the issue
 function validateContact(req){
 	const schema=Joi.object({
@@ -33,5 +34,4 @@ function validateContact(req){
 
 
 exports.validateContact =validateContact;
-
-module.exports.Contact =Contact;
+exports.Contact =Contact;
